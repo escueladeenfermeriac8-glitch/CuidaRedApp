@@ -1,0 +1,98 @@
+{
+  "id": "mos",
+  "version": "1.0",
+  "fuente": "Sherbourne y Stewart (1991); Jacquier et al. (2014), pp. 169-171",
+  "descripcion": "Cuestionario MOS de apoyo social percibido",
+  "escala": {
+    "min": 1,
+    "max": 5,
+    "opciones": [
+      { "valor": 1, "etiqueta": "Nunca" },
+      { "valor": 2, "etiqueta": "Pocas veces" },
+      { "valor": 3, "etiqueta": "Algunas veces" },
+      { "valor": 4, "etiqueta": "La mayoría de las veces" },
+      { "valor": 5, "etiqueta": "Siempre" }
+    ]
+  },
+  "preguntaDescriptiva": {
+    "n": 1,
+    "enunciado": "¿Cuántos amigos íntimos y familiares cercanos tiene con los que puede contar?",
+    "tipo": "descriptivo",
+    "puntaje": false
+  },
+  "items": [
+    { "n": 2, "enunciado": "Alguien que le ayude cuando tenga que estar en la cama", "subescala": "ayuda_material" },
+    { "n": 3, "enunciado": "Alguien que lo escuche cuando necesita hablar", "subescala": "emocional_informacional" },
+    { "n": 4, "enunciado": "Alguien que le aconseje cuando tenga problemas", "subescala": "emocional_informacional" },
+    { "n": 5, "enunciado": "Alguien que lo lleve al médico cuando lo necesita", "subescala": "ayuda_material" },
+    { "n": 6, "enunciado": "Alguien que le muestre amor y afecto", "subescala": "afectivo" },
+    { "n": 7, "enunciado": "Alguien que le haga pasar un buen rato", "subescala": "ocio" },
+    { "n": 8, "enunciado": "Alguien que le informe y le ayude a entender una situación", "subescala": "emocional_informacional" },
+    { "n": 9, "enunciado": "Alguien en quien confiar o con quien hablar de sí mismo y de sus preocupaciones", "subescala": "emocional_informacional" },
+    { "n": 10, "enunciado": "Alguien que le abrace", "subescala": "afectivo" },
+    { "n": 11, "enunciado": "Alguien que le permita relajarse", "subescala": "ocio" },
+    { "n": 12, "enunciado": "Alguien que le prepare la comida si no puede hacerlo", "subescala": "ayuda_material" },
+    { "n": 13, "enunciado": "Alguien cuyo consejo realmente desee", "subescala": "emocional_informacional" },
+    { "n": 14, "enunciado": "Alguien que haga cosas con usted para olvidar sus problemas", "subescala": "ocio" },
+    { "n": 15, "enunciado": "Alguien que le ayude en sus tareas domésticas si está enfermo", "subescala": "ayuda_material" },
+    { "n": 16, "enunciado": "Alguien que comparta sus temores y problemas más íntimos", "subescala": "emocional_informacional" },
+    { "n": 17, "enunciado": "Alguien que le aconseje cómo resolver sus problemas personales", "subescala": "emocional_informacional" },
+    { "n": 18, "enunciado": "Alguien que se divierta con usted", "subescala": "ocio" },
+    { "n": 19, "enunciado": "Alguien que comprenda sus problemas", "subescala": "emocional_informacional" },
+    { "n": 20, "enunciado": "Alguien que le ame y le haga sentirse querido", "subescala": "afectivo" }
+  ],
+  "subescalas": {
+    "emocional_informacional": {
+      "nombre": "Apoyo emocional / informacional",
+      "items": [3, 4, 8, 9, 13, 16, 17, 19],
+      "min": 8,
+      "medio": 24,
+      "max": 40
+    },
+    "ayuda_material": {
+      "nombre": "Ayuda material / instrumental",
+      "items": [2, 5, 12, 15],
+      "min": 4,
+      "medio": 12,
+      "max": 20
+    },
+    "ocio": {
+      "nombre": "Relaciones sociales de ocio / distracción",
+      "items": [7, 11, 14, 18],
+      "min": 4,
+      "medio": 12,
+      "max": 20
+    },
+    "afectivo": {
+      "nombre": "Apoyo afectivo",
+      "items": [6, 10, 20],
+      "min": 3,
+      "medio": 9,
+      "max": 15
+    },
+    "global": {
+      "nombre": "Índice global de apoyo social",
+      "items": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+      "min": 19,
+      "medio": 57,
+      "max": 95
+    }
+  },
+  "cortes": [
+    {
+      "min": 19,
+      "max": 56,
+      "etiqueta": "Apoyo social percibido bajo",
+      "nivel": "atencion",
+      "accionApp": "alerta_apoyo_deficitario"
+    },
+    {
+      "min": 57,
+      "max": 95,
+      "etiqueta": "Apoyo social percibido adecuado",
+      "nivel": "ok",
+      "accionApp": "sin_alerta"
+    }
+  ],
+  "_comentarioClinico": "TODO(belen): Confirmar con el cuadro de interpretación del libro (p. 171) los percentiles y cortes por subescala."
+}

@@ -1,0 +1,83 @@
+{
+  "id": "reglasInstrumentos",
+  "version": "1.0",
+  "fuente": "Anexo A.4 de DISENO_BASE.md",
+  "descripcion": "Reglas de sugerencia de instrumentos y alertas de riesgo psicosocial",
+  "reglas": [
+    {
+      "id": "r1",
+      "descripcion": "APGAR con disfunción familiar leve o grave",
+      "si": {
+        "instrumento": "apgar",
+        "resultado": ["disfuncion_leve", "disfuncion_grave"]
+      },
+      "entonces": {
+        "sugerir": ["mos", "holmes"],
+        "mensaje": "Se sugiere valorar el apoyo social (MOS) y los acontecimientos vitales estresantes (Holmes y Rahe)."
+      }
+    },
+    {
+      "id": "r2",
+      "descripcion": "APGAR funcional pero estrés elevado en Holmes y Rahe",
+      "si": {
+        "apgar": "funcional",
+        "holmes": { "min": 150 }
+      },
+      "entonces": {
+        "sugerir": ["mos"],
+        "mensaje": "La familia presenta estrés significativo reciente; se sugiere valorar su red de apoyo social (MOS)."
+      }
+    },
+    {
+      "id": "r3",
+      "descripcion": "Estrés elevado con bajo apoyo social percibido",
+      "si": {
+        "holmes": { "min": 150 },
+        "mosGlobal": { "max": 56 }
+      },
+      "entonces": {
+        "alerta": "riesgo_psicosocial",
+        "nivel": "critico",
+        "mensaje": "Alerta de riesgo psicosocial: alto estrés acumulado con red de apoyo insuficiente. Requiere atención prioritaria y seguimiento del equipo de salud."
+      }
+    },
+    {
+      "id": "r4",
+      "descripcion": "Discrepancia entre APGAR funcional y Patrón 8 (rol y relaciones) alterado",
+      "si": {
+        "apgar": "funcional",
+        "patronAlterado": 8
+      },
+      "entonces": {
+        "sugerir": ["mos"],
+        "accion": "repetir_apgar_otro_miembro",
+        "mensaje": "El APGAR dio funcional pero el patrón de roles y relaciones se observó alterado: se sugiere valorar MOS y repetir APGAR con otro integrante."
+      }
+    },
+    {
+      "id": "r5",
+      "descripcion": "Hogar de una sola persona (unipersonal)",
+      "si": {
+        "tipoHogar": "unipersonal"
+      },
+      "entonces": {
+        "apgarAplica": false,
+        "sugerir": ["mos", "holmes"],
+        "mensaje": "En hogares unipersonales el APGAR no aplica; se ofrece MOS (apoyo social) y Holmes y Rahe (acontecimientos vitales)."
+      }
+    },
+    {
+      "id": "r6",
+      "descripcion": "Sospecha de violencia intrafamiliar o de género",
+      "si": {
+        "alertaClinica": "sospecha_violencia"
+      },
+      "entonces": {
+        "accion": "entrevista_individual_segura",
+        "protocolo": "seguridad_institucional",
+        "mensaje": "Ante sospecha de violencia, entrevistar por separado cuidando estrictamente la seguridad de la persona y activar el protocolo institucional de la organización."
+      }
+    }
+  ],
+  "_comentarioClinico": "TODO(belen): Validar criterios y mensajes con el equipo docente antes del inicio de las prácticas en terreno."
+}

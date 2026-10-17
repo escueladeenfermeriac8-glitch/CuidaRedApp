@@ -523,13 +523,22 @@ export interface CorteInstrumento {
   accionApp?: string
 }
 
+export type SujetoCuidadoNanda =
+  | 'individuo'
+  | 'familia'
+  | 'comunidad'
+  | 'pareja'
+  | 'grupo'
+  | 'cuidador'
+
 // NANDA por patrón
 export interface ItemNanda {
   codigo: string
   etiqueta: string
-  sujeto: ('familia' | 'comunidad')[]
+  sujeto: SujetoCuidadoNanda[]
   patrones: number[]
   tipo: 'problema' | 'riesgo' | 'disposicion'
+  notaClinica?: string
 }
 
 // ─────────────────────────────────────────────

@@ -1,0 +1,376 @@
+{
+  "id": "nandaPorPatron",
+  "version": "1.0",
+  "edicion": "NANDA-I 2012-2014 / Libro UNRC (2014)",
+  "fuente": "Anexo E de DISENO_BASE.md; contrastado con conversión SAS (2015) y cátedra UNRC",
+  "descripcion": "Catálogo semilla de 52 diagnósticos de enfermería clasificados por los 11 patrones funcionales de Marjory Gordon",
+  "items": [
+    {
+      "codigo": "00188",
+      "etiqueta": "Tendencia a adoptar conductas de riesgo para la salud",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [1]
+    },
+    {
+      "codigo": "00078",
+      "etiqueta": "Gestión ineficaz de la propia salud",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [1]
+    },
+    {
+      "codigo": "00215",
+      "etiqueta": "Salud deficiente de la comunidad",
+      "tipo": "problema",
+      "sujeto": ["comunidad"],
+      "patrones": [1]
+    },
+    {
+      "codigo": "00098",
+      "etiqueta": "Deterioro del mantenimiento del hogar",
+      "tipo": "problema",
+      "sujeto": ["familia"],
+      "patrones": [1]
+    },
+    {
+      "codigo": "00186",
+      "etiqueta": "Disposición para mejorar el estado de inmunización",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [1],
+      "notaClinica": "TODO(belen): Etiqueta del libro. NANDA-I 2012 lo marca como retirado; validar edición definitiva con cátedra."
+    },
+    {
+      "codigo": "00162",
+      "etiqueta": "Disposición para mejorar la gestión de la propia salud",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [1]
+    },
+    {
+      "codigo": "00002",
+      "etiqueta": "Desequilibrio nutricional: inferior a las necesidades corporales",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [2]
+    },
+    {
+      "codigo": "00232",
+      "etiqueta": "Obesidad",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [2]
+    },
+    {
+      "codigo": "00233",
+      "etiqueta": "Sobrepeso",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [2]
+    },
+    {
+      "codigo": "00047",
+      "etiqueta": "Riesgo de deterioro de la integridad cutánea",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [2]
+    },
+    {
+      "codigo": "00163",
+      "etiqueta": "Disposición para mejorar la nutrición",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia", "comunidad"],
+      "patrones": [2]
+    },
+    {
+      "codigo": "00011",
+      "etiqueta": "Estreñimiento",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [3]
+    },
+    {
+      "codigo": "00015",
+      "etiqueta": "Riesgo de estreñimiento",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [3]
+    },
+    {
+      "codigo": "00013",
+      "etiqueta": "Diarrea",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [3]
+    },
+    {
+      "codigo": "00017",
+      "etiqueta": "Incontinencia urinaria de esfuerzo",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [3]
+    },
+    {
+      "codigo": "00020",
+      "etiqueta": "Incontinencia urinaria funcional",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [3]
+    },
+    {
+      "codigo": "00092",
+      "etiqueta": "Intolerancia a la actividad",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [4]
+    },
+    {
+      "codigo": "00097",
+      "etiqueta": "Déficit de actividades recreativas",
+      "tipo": "problema",
+      "sujeto": ["grupo", "comunidad"],
+      "patrones": [4]
+    },
+    {
+      "codigo": "00108",
+      "etiqueta": "Déficit de autocuidado: baño",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [4]
+    },
+    {
+      "codigo": "00182",
+      "etiqueta": "Disposición para mejorar el autocuidado",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [4]
+    },
+    {
+      "codigo": "00095",
+      "etiqueta": "Insomnio",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [5]
+    },
+    {
+      "codigo": "00198",
+      "etiqueta": "Trastorno del patrón de sueño",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [5]
+    },
+    {
+      "codigo": "00165",
+      "etiqueta": "Disposición para mejorar el sueño",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [5]
+    },
+    {
+      "codigo": "00126",
+      "etiqueta": "Conocimientos deficientes",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia", "comunidad"],
+      "patrones": [6]
+    },
+    {
+      "codigo": "00132",
+      "etiqueta": "Dolor agudo",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [6]
+    },
+    {
+      "codigo": "00133",
+      "etiqueta": "Dolor crónico",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [6]
+    },
+    {
+      "codigo": "00161",
+      "etiqueta": "Disposición para mejorar los conocimientos",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia", "comunidad"],
+      "patrones": [6]
+    },
+    {
+      "codigo": "00120",
+      "etiqueta": "Baja autoestima situacional",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [7]
+    },
+    {
+      "codigo": "00153",
+      "etiqueta": "Riesgo de baja autoestima situacional",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [7]
+    },
+    {
+      "codigo": "00146",
+      "etiqueta": "Ansiedad",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [7]
+    },
+    {
+      "codigo": "00118",
+      "etiqueta": "Trastorno de la imagen corporal",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [7]
+    },
+    {
+      "codigo": "00061",
+      "etiqueta": "Cansancio del rol de cuidador",
+      "tipo": "problema",
+      "sujeto": ["familia", "cuidador"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00062",
+      "etiqueta": "Riesgo de cansancio del rol de cuidador",
+      "tipo": "riesgo",
+      "sujeto": ["familia", "cuidador"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00063",
+      "etiqueta": "Procesos familiares disfuncionales",
+      "tipo": "problema",
+      "sujeto": ["familia"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00053",
+      "etiqueta": "Aislamiento social",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00052",
+      "etiqueta": "Deterioro de la interacción social",
+      "tipo": "problema",
+      "sujeto": ["individuo", "grupo"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00159",
+      "etiqueta": "Disposición para mejorar los procesos familiares",
+      "tipo": "disposicion",
+      "sujeto": ["familia"],
+      "patrones": [8]
+    },
+    {
+      "codigo": "00059",
+      "etiqueta": "Disfunción sexual",
+      "tipo": "problema",
+      "sujeto": ["individuo", "pareja"],
+      "patrones": [9]
+    },
+    {
+      "codigo": "00065",
+      "etiqueta": "Patrón sexual ineficaz",
+      "tipo": "problema",
+      "sujeto": ["individuo", "pareja"],
+      "patrones": [9]
+    },
+    {
+      "codigo": "00221",
+      "etiqueta": "Proceso de maternidad ineficaz",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [9]
+    },
+    {
+      "codigo": "00209",
+      "etiqueta": "Riesgo de alteración de la díada materno/fetal",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [9]
+    },
+    {
+      "codigo": "00208",
+      "etiqueta": "Disposición para mejorar el proceso de maternidad",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [9]
+    },
+    {
+      "codigo": "00069",
+      "etiqueta": "Afrontamiento ineficaz",
+      "tipo": "problema",
+      "sujeto": ["individuo"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00073",
+      "etiqueta": "Afrontamiento familiar incapacitante",
+      "tipo": "problema",
+      "sujeto": ["familia"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00074",
+      "etiqueta": "Afrontamiento familiar comprometido",
+      "tipo": "problema",
+      "sujeto": ["familia"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00077",
+      "etiqueta": "Afrontamiento inefectivo de la comunidad",
+      "tipo": "problema",
+      "sujeto": ["comunidad"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00076",
+      "etiqueta": "Disposición para mejorar el afrontamiento de la comunidad",
+      "tipo": "disposicion",
+      "sujeto": ["comunidad"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00075",
+      "etiqueta": "Disposición para mejorar el afrontamiento familiar",
+      "tipo": "disposicion",
+      "sujeto": ["familia"],
+      "patrones": [10]
+    },
+    {
+      "codigo": "00066",
+      "etiqueta": "Sufrimiento espiritual",
+      "tipo": "problema",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [11]
+    },
+    {
+      "codigo": "00067",
+      "etiqueta": "Riesgo de sufrimiento espiritual",
+      "tipo": "riesgo",
+      "sujeto": ["individuo", "familia"],
+      "patrones": [11]
+    },
+    {
+      "codigo": "00068",
+      "etiqueta": "Disposición para mejorar el bienestar espiritual",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia", "comunidad"],
+      "patrones": [11]
+    },
+    {
+      "codigo": "00183",
+      "etiqueta": "Disposición para mejorar el confort",
+      "tipo": "disposicion",
+      "sujeto": ["individuo", "familia", "comunidad"],
+      "patrones": [7, 11],
+      "notaClinica": "Diagnóstico transversal a autopercepción (7) y valores/creencias (11)."
+    }
+  ],
+  "_comentarioClinico": "TODO(belen): Decidir edición NANDA-I definitiva (actualmente semilla usa 2012-2014 / Libro UNRC 2014) y sumar diagnósticos complementarios de comunidad (00004 saneamiento, 00168 sedentarismo, 00155 caídas, 00124 desesperanza, 00138 violencia)."
+}

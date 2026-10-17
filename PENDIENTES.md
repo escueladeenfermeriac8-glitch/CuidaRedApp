@@ -28,7 +28,7 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 | ID | Descripción | Archivo | Quién |
 |---|---|---|---|
 | P-10 | **Nombre definitivo y logos** — actualmente "CuidaRed" es una constante `APP_NAME`. Registro de marca y dominio pendientes. | `src/constants/app.ts` | Belén |
-| P-11 | **Favicon e iconos de la PWA** — favicon temporal SVG + el anillo. Los iconos `icon-192.png` y `icon-512.png` **no existen todavía** (la PWA no se puede instalar sin ellos). Generar o diseñar antes del 20/10. | `public/icons/` | Belén / diseño |
+| P-11 | **Favicon e iconos de la PWA** — Favicon temporal SVG + iconos `public/icons/icon-192.png` e `icon-512.png` generados con el anillo de 11 nodos (PWA instalable). Reemplazar si se define logo gráfico definitivo. | `public/icons/` | Belén / diseño |
 | P-12 | **Política de retención de datos** — definir cuántos días se retienen los datos (`retencionDias` en el config de la organización). | DISENO_BASE.md §10 | Belén + cátedra |
 | P-13 | **Protocolo de consentimiento** — redactar y aprobar con la autoridad del servicio. Incluir texto para la UI. | DISENO_BASE.md §10 | Cátedra |
 | P-14 | **Cierre de sesión automático** — definir N días sin uso para auto-logout. Actualmente no implementado. | `src/contexts/AuthContext.tsx` | Belén |
@@ -83,3 +83,16 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] `firebase.json` y `firestore.indexes.json`
 - [x] Git init + `.gitignore`
 - [x] `PENDIENTES.md` (este archivo)
+
+---
+
+## ✅ Completado en paso 4
+
+- [x] Generación de iconos PWA instalables (`public/icons/icon-192.png` y `public/icons/icon-512.png`) con anillo de 11 nodos y fondo seguro maskable
+- [x] Catálogo `src/catalogos/apgar.json` (5 dimensiones, escala 0-2, cortes funcional / disfunción leve / grave)
+- [x] Catálogo `src/catalogos/holmes.json` (43 eventos vitales con UCV y cortes de riesgo psicosocial)
+- [x] Catálogo `src/catalogos/mos.json` (pregunta descriptiva, 19 ítems en 4 subescalas, índice global y cortes)
+- [x] Catálogo `src/catalogos/nandaPorPatron.json` (52 diagnósticos clasificados por los 11 patrones funcionales de Gordon, tipos problema/riesgo/disposición y sujetos)
+- [x] Catálogo `src/catalogos/reglasInstrumentos.json` (reglas r1 a r6 de sugerencias y alertas psicosociales según Anexo A.4)
+- [x] Módulo tipado `src/catalogos/index.ts` con funciones puras `calcularApgar`, `calcularHolmes`, `calcularMos` y `filtrarDiagnosticosNanda`
+

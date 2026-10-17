@@ -1,0 +1,66 @@
+{
+  "id": "apgar",
+  "version": "1.0",
+  "fuente": "Smilkstein (1978); Jacquier et al. (2014), p. 173",
+  "descripcion": "Cuestionario de funcionalidad familiar para el primer nivel de atención",
+  "escala": {
+    "min": 0,
+    "max": 2,
+    "opciones": [
+      { "valor": 0, "clave": "casiNunca", "etiqueta": "Casi nunca" },
+      { "valor": 1, "clave": "aVeces", "etiqueta": "A veces" },
+      { "valor": 2, "clave": "casiSiempre", "etiqueta": "Casi siempre" }
+    ]
+  },
+  "items": [
+    {
+      "n": 1,
+      "dimension": "Adaptación",
+      "enunciado": "Estoy satisfecho/a con la ayuda que recibo de mi familia cuando algo me preocupa"
+    },
+    {
+      "n": 2,
+      "dimension": "Participación",
+      "enunciado": "Estoy satisfecho/a con la forma en que mi familia conversa y comparte los problemas conmigo"
+    },
+    {
+      "n": 3,
+      "dimension": "Crecimiento",
+      "enunciado": "Mi familia acepta y apoya mis deseos de emprender nuevas actividades o cambios"
+    },
+    {
+      "n": 4,
+      "dimension": "Afecto",
+      "enunciado": "Estoy satisfecho/a con cómo mi familia expresa afecto y responde a mis emociones (rabia, tristeza, amor)"
+    },
+    {
+      "n": 5,
+      "dimension": "Resolución",
+      "enunciado": "Estoy satisfecho/a con el tiempo que compartimos en familia (tiempo juntos, espacios, dinero)"
+    }
+  ],
+  "cortes": [
+    {
+      "min": 7,
+      "max": 10,
+      "etiqueta": "Familia funcional",
+      "nivel": "ok",
+      "accionApp": "sin_alerta"
+    },
+    {
+      "min": 3,
+      "max": 6,
+      "etiqueta": "Disfunción leve",
+      "nivel": "atencion",
+      "accionApp": "sugerir_mos_y_holmes"
+    },
+    {
+      "min": 0,
+      "max": 2,
+      "etiqueta": "Disfunción grave",
+      "nivel": "critico",
+      "accionApp": "alerta_sugerir_atencion_prioritaria"
+    }
+  ],
+  "_comentarioClinico": "TODO(belen): Contrastar con la p. 173 del libro (Jacquier et al., 2014) si existen diferencias con los cortes o escalas."
+}
