@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Anillo de 11 nodos — elemento visual de CuidaRed -->
+  <!-- TODO(belen): reemplazar cuando haya logo definitivo autorizado -->
+  <circle cx="24" cy="24" r="20" stroke="#17375E" stroke-width="2"/>
+  <circle cx="24" cy="24" r="3.5" fill="#1AA6A0"/>
+  <!-- 11 nodos del anillo de patrones -->
+  <circle cx="24" cy="4" r="2.5" fill="#3E6A9A"/>
+  <circle cx="34.6" cy="7.8" r="2.5" fill="#3E6A9A"/>
+  <circle cx="42.2" cy="17" r="2.5" fill="#3E6A9A"/>
+  <circle cx="43.5" cy="28.5" r="2.5" fill="#3E6A9A"/>
+  <circle cx="37.9" cy="38.6" r="2.5" fill="#3E6A9A"/>
+  <circle cx="27.8" cy="44.5" r="2.5" fill="#3E6A9A"/>
+  <circle cx="16.2" cy="44.5" r="2.5" fill="#3E6A9A"/>
+  <circle cx="6.1" cy="38.6" r="2.5" fill="#3E6A9A"/>
+  <circle cx="0.5" cy="28.5" r="2.5" fill="#3E6A9A"/>
+  <circle cx="1.8" cy="17" r="2.5" fill="#3E6A9A"/>
+  <circle cx="9.4" cy="7.8" r="2.5" fill="#3E6A9A"/>
+</svg>

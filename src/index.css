@@ -1,0 +1,450 @@
+/* ==========================================================
+   CuidaRed — Sistema de tokens visuales
+   Fuente de verdad: DISENO_BASE.md sección 8
+   ========================================================== */
+
+/* ---------- Fuentes (incluidas en el bundle, sin CDN) ---------- */
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/atkinson-hyperlegible-next/400.css";
+@import "@fontsource/atkinson-hyperlegible-next/700.css";
+
+/* ---------- Tokens de color — Modo claro ---------- */
+:root {
+  /* Paleta principal */
+  --tinta:        #0B1F33;
+  --azul:         #17375E;
+  --azul-medio:   #3E6A9A;
+  --lago:         #1AA6A0;
+  --papel:        #F5F7FA;
+  --tarjeta:      #FFFFFF;
+  --linea:        #D9E0E8;
+  --apagado:      #5B6B7C;
+
+  /* Estados clínicos y de sistema (siempre con ícono + texto) */
+  --ok:           #2F9E6B;
+  --atencion:     #C98A00;
+  --critico:      #C8392F;
+
+  /* Tipografía */
+  --font-titulo:  'Fraunces', serif;
+  --font-ui:      'Atkinson Hyperlegible Next', sans-serif;
+
+  /* Escala tipográfica (px base → rem) */
+  --text-xs:      0.8125rem;   /* 13px */
+  --text-sm:      1rem;        /* 16px */
+  --text-md:      1.125rem;    /* 18px */
+  --text-lg:      1.375rem;    /* 22px */
+  --text-xl:      1.75rem;     /* 28px */
+  --text-2xl:     2.25rem;     /* 36px */
+  --leading:      1.45;
+
+  /* Espaciado (grilla de 4px) */
+  --sp-1:  0.25rem;   /* 4px  */
+  --sp-2:  0.5rem;    /* 8px  */
+  --sp-3:  0.75rem;   /* 12px */
+  --sp-4:  1rem;      /* 16px */
+  --sp-6:  1.5rem;    /* 24px */
+  --sp-8:  2rem;      /* 32px */
+
+  /* Radios */
+  --r-tarjeta:  14px;
+  --r-campo:    10px;
+  --r-boton:    12px;
+  --r-chip:     999px;
+
+  /* Íconos (trazo uniforme Lucide) */
+  --icon-stroke: 1.75px;
+
+  /* Transiciones (solo cambios de estado, sin decoración) */
+  --dur-rapido:   150ms;
+  --dur-normal:   250ms;
+  --ease:         ease-in-out;
+
+  /* Elevación: usar bordes, no sombras */
+  --sombra-tarjeta: none;
+}
+
+/* ---------- Tokens de color — Modo oscuro ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --tinta:        #E8EEF5;
+    --azul:         #8DB4E2;
+    --azul-medio:   #6C9AD0;
+    --lago:         #3CCFC8;
+    --papel:        #0C1622;
+    --tarjeta:      #14212F;
+    --linea:        #273647;
+    --apagado:      #9AA9BA;
+    --ok:           #4CC38A;
+    --atencion:     #E7B13A;
+    --critico:      #F07A70;
+  }
+}
+
+/* ---------- Alto contraste para exteriores (modo claro) ---------- */
+@media (prefers-contrast: more) {
+  :root {
+    --tinta:      #000000;
+    --papel:      #FFFFFF;
+    --tarjeta:    #FFFFFF;
+    --linea:      #000000;
+    --apagado:    #2A3A4A;
+  }
+}
+
+/* ---------- Base global ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;          /* base para rem */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+  color: var(--tinta);
+  background-color: var(--papel);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+/* ---------- Reducir movimiento ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Tipografía ---------- */
+h1, h2, h3 {
+  font-family: var(--font-titulo);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--tinta);
+}
+
+h1 { font-size: var(--text-xl); }
+h2 { font-size: var(--text-lg); }
+h3 { font-size: var(--text-md); font-weight: 600; }
+
+p, li, label, span {
+  font-family: var(--font-ui);
+}
+
+/* Máximo de caracteres por línea en la central */
+.prose {
+  max-width: 65ch;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  border-radius: var(--r-boton);
+  padding: var(--sp-3) var(--sp-6);
+  min-height: 48px;           /* objetivo táctil mínimo */
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background-color var(--dur-rapido) var(--ease),
+              border-color var(--dur-rapido) var(--ease),
+              color var(--dur-rapido) var(--ease);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primario */
+.btn-primary {
+  background-color: var(--azul);
+  color: var(--tarjeta);
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--azul-medio);
+}
+
+/* Secundario */
+.btn-secondary {
+  background-color: transparent;
+  border-color: var(--azul);
+  color: var(--azul);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--azul) 8%, transparent);
+}
+
+/* Peligro */
+.btn-danger {
+  background-color: transparent;
+  border-color: var(--critico);
+  color: var(--critico);
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--critico) 8%, transparent);
+}
+
+/* Botón texto / enlace */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--azul-medio);
+  padding-left: 0;
+  padding-right: 0;
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--azul);
+  text-decoration: underline;
+}
+
+/* ---------- Campos de formulario ---------- */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.campo label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--apagado);
+  text-transform: none;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--tinta);
+  background-color: var(--tarjeta);
+  border: 2px solid var(--linea);
+  border-radius: var(--r-campo);
+  padding: var(--sp-3) var(--sp-4);
+  min-height: 48px;
+  outline: none;
+  transition: border-color var(--dur-rapido) var(--ease);
+  width: 100%;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: var(--azul-medio);
+}
+
+.campo input[aria-invalid="true"],
+.campo select[aria-invalid="true"],
+.campo textarea[aria-invalid="true"] {
+  border-color: var(--critico);
+}
+
+.campo .ayuda {
+  font-size: var(--text-xs);
+  color: var(--apagado);
+}
+
+.campo .error-msg {
+  font-size: var(--text-xs);
+  color: var(--critico);
+  font-weight: 700;
+}
+
+/* ---------- Tarjetas ---------- */
+.tarjeta {
+  background-color: var(--tarjeta);
+  border: 1px solid var(--linea);
+  border-radius: var(--r-tarjeta);
+  padding: var(--sp-4);
+}
+
+/* ---------- Chips ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  background-color: color-mix(in srgb, var(--lago) 12%, var(--tarjeta));
+  color: var(--lago);
+  border-radius: var(--r-chip);
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* ---------- Estados de sincronización ---------- */
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--text-xs);
+}
+.sync-badge--enviado  { color: var(--ok); }
+.sync-badge--pendiente{ color: var(--atencion); }
+.sync-badge--revisar  { color: var(--critico); }
+
+/* Franja offline */
+.franja-offline {
+  background-color: var(--atencion);
+  color: var(--tarjeta);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-align: center;
+  padding: var(--sp-1) var(--sp-4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* ---------- Layout de campo (mobile-first) ---------- */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-main {
+  flex: 1;
+  padding: var(--sp-4);
+  padding-bottom: calc(var(--sp-4) + 72px); /* espacio para nav inferior */
+}
+
+/* Barra de navegación inferior */
+.nav-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--tarjeta);
+  border-top: 1px solid var(--linea);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 64px;
+  z-index: 50;
+}
+
+.nav-bottom a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--apagado);
+  text-decoration: none;
+  font-size: 0.625rem;       /* 10px */
+  font-weight: 700;
+  padding: var(--sp-2);
+  min-width: 48px;
+  min-height: 48px;
+  justify-content: center;
+  border-radius: var(--r-boton);
+  transition: color var(--dur-rapido) var(--ease);
+}
+
+.nav-bottom a.active,
+.nav-bottom a:hover {
+  color: var(--lago);
+}
+
+/* ---------- Selector de respuesta grande (para escalas 0/1/2, Sí/No) ---------- */
+.opciones-grandes {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+.opcion-grande {
+  flex: 1;
+  min-width: 80px;
+  min-height: 56px;
+  border: 2px solid var(--linea);
+  border-radius: var(--r-boton);
+  background-color: var(--tarjeta);
+  color: var(--tinta);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color var(--dur-rapido) var(--ease),
+              background-color var(--dur-rapido) var(--ease);
+  text-align: center;
+}
+
+.opcion-grande:hover {
+  border-color: var(--azul-medio);
+}
+
+.opcion-grande.selected {
+  border-color: var(--lago);
+  background-color: color-mix(in srgb, var(--lago) 10%, var(--tarjeta));
+  color: var(--lago);
+}
+
+/* ---------- Anillo de patrones ---------- */
+.anillo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* La animación del anillo solo se ejecuta al completar una valoración */
+@keyframes nodo-encendido {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.anillo-nodo--completado {
+  animation: nodo-encendido var(--dur-normal) var(--ease) forwards;
+}
+
+/* ---------- Utilidades ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-apagado  { color: var(--apagado); }
+.text-ok       { color: var(--ok); }
+.text-atencion { color: var(--atencion); }
+.text-critico  { color: var(--critico); }
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--linea);
+  margin: var(--sp-4) 0;
+}

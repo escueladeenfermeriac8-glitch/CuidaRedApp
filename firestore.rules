@@ -1,0 +1,210 @@
+rules_version = '2';
+
+// ============================================================
+// Firestore Security Rules — CuidaRed
+// DISENO_BASE.md §10 + ajuste de roles §3
+//
+// NOTA DE IMPLEMENTACIÓN:
+// El esquema original usa "docente" pero los roles definidos en §3 son
+// supervisor | admin | admin_global. Se mapea:
+//   docente → supervisor | admin | admin_global
+// TODO(belen): confirmar el mapeo antes del piloto (ver PENDIENTES.md).
+//
+// Probar con el emulador: firebase emulators:start
+// ============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Funciones auxiliares ────────────────────────────────
+    function usuarioDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    function activo() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && usuarioDoc().activo == true;
+    }
+
+    function rol() {
+      return usuarioDoc().rol;
+    }
+
+    // supervisor | admin | admin_global pueden ver y validar en su organización
+    function esSupervisorOAdmin() {
+      return activo() && rol() in ['supervisor', 'admin', 'admin_global'];
+    }
+
+    function esAdmin() {
+      return activo() && rol() in ['admin', 'admin_global'];
+    }
+
+    function esAdminGlobal() {
+      return activo() && rol() == 'admin_global';
+    }
+
+    // El CAPS del recurso está en la lista del usuario
+    function enMisCaps(capsId) {
+      return capsId in usuarioDoc().capsIds;
+    }
+
+    // El recurso pertenece a la organización del usuario
+    function mismaOrg(orgId) {
+      return orgId == usuarioDoc().orgId;
+    }
+
+    // El recurso fue creado por el usuario actual
+    function esAutor() {
+      return resource.data.createdBy == request.auth.uid;
+    }
+
+    // Validar campos mínimos en escritura
+    function tieneBaseDoc() {
+      return request.resource.data.keys().hasAll([
+        'createdAt', 'createdBy', 'deviceId', 'schemaVersion'
+      ]) && request.resource.data.createdBy == request.auth.uid;
+    }
+
+    // ─── organizaciones ──────────────────────────────────────
+    match /organizaciones/{orgId} {
+      allow read: if activo() && mismaOrg(orgId);
+      allow write: if esAdminGlobal();
+    }
+
+    // ─── usuarios ────────────────────────────────────────────
+    match /usuarios/{uid} {
+      // Cada usuario puede leer su propio documento
+      allow read: if activo() && (request.auth.uid == uid || esSupervisorOAdmin());
+      // Solo el admin crea y actualiza usuarios
+      allow create: if activo() && esAdmin();
+      allow update: if activo() && (request.auth.uid == uid || esAdmin());
+      allow delete: if false;  // baja lógica
+    }
+
+    // ─── invitaciones ────────────────────────────────────────
+    match /invitaciones/{emailMin} {
+      // El primer login necesita leer su invitación (auth pero sin doc de usuario aún)
+      allow read: if request.auth != null;
+      allow create, update: if activo() && esAdmin();
+      allow delete: if false;
+    }
+
+    // ─── caps ────────────────────────────────────────────────
+    match /caps/{capsId} {
+      allow read: if activo() && (enMisCaps(capsId) || esSupervisorOAdmin());
+      allow write: if esAdmin();
+    }
+
+    // ─── barrios ─────────────────────────────────────────────
+    match /barrios/{barrioId} {
+      allow read: if activo();
+      allow create: if activo() && tieneBaseDoc();
+      allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+      allow delete: if false;
+
+      // Valoraciones comunitarias del barrio
+      match /valoracionesComunidad/{valorId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+    }
+
+    // ─── familias ────────────────────────────────────────────
+    match /familias/{famId} {
+      allow read: if activo()
+        && mismaOrg(resource.data.orgId)
+        && (enMisCaps(resource.data.capsId) || esSupervisorOAdmin());
+      allow create: if activo() && tieneBaseDoc();
+      allow update: if activo()
+        && mismaOrg(resource.data.orgId)
+        && (esAutor() || esSupervisorOAdmin());
+      allow delete: if false;  // baja lógica
+
+      // ─── integrantes ───────────────────────────────────────
+      match /integrantes/{integranteId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── parejas ──────────────────────────────────────────
+      match /parejas/{parejaId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── relacionesInterpersonales (modelo P0, UI P2) ──────
+      match /relacionesInterpersonales/{relId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── acontecimientosVitales (modelo P0, UI P2) ─────────
+      match /acontecimientosVitales/{aconId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo() && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── valoraciones (append-only) ────────────────────────
+      match /valoraciones/{valorId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        // No se edita: append-only. Supervisor puede agregar interpretación.
+        allow update: if esSupervisorOAdmin() && mismaOrg(resource.data.orgId);
+        allow delete: if false;
+      }
+
+      // ─── diagnosticos ──────────────────────────────────────
+      match /diagnosticos/{diagId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        // El supervisor confirma o descarta
+        allow update: if activo()
+          && mismaOrg(resource.data.orgId)
+          && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── plan ──────────────────────────────────────────────
+      match /plan/{planId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if activo()
+          && mismaOrg(resource.data.orgId)
+          && (esAutor() || esSupervisorOAdmin());
+        allow delete: if false;
+      }
+
+      // ─── evoluciones ───────────────────────────────────────
+      match /evoluciones/{evolId} {
+        allow read: if activo() && mismaOrg(resource.data.orgId);
+        allow create: if activo() && tieneBaseDoc();
+        allow update: if false;   // las evoluciones no se editan
+        allow delete: if false;
+      }
+    }
+
+    // ─── catálogos (lectura global, escritura admin_global) ──
+    match /catalogos/{catNombre} {
+      allow read: if activo();
+      allow write: if esAdminGlobal();
+    }
+
+    // ─── métricas (sin datos personales) ─────────────────────
+    match /metricas/{metId} {
+      allow create: if activo();
+      allow read: if esSupervisorOAdmin();
+      allow update, delete: if false;
+    }
+  }
+}

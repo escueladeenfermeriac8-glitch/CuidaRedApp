@@ -1,0 +1,112 @@
+{
+  "appName": "CuidaRed",
+  "nav": {
+    "inicio": "Inicio",
+    "familias": "Familias",
+    "pendientes": "Pendientes",
+    "sincronizar": "Sincronizar",
+    "perfil": "Perfil"
+  },
+  "auth": {
+    "loginTitle": "Ingresá a {{appName}}",
+    "loginSubtitle": "Herramienta de valoración comunitaria y familiar",
+    "loginButton": "Continuar con Google",
+    "loginLoading": "Ingresando...",
+    "noAccess": "Tu cuenta todavía no tiene acceso. Pedíselo a quien administra tu organización.",
+    "logout": "Cerrar sesión",
+    "sessionExpired": "Tu sesión venció. Volvé a ingresar."
+  },
+  "sync": {
+    "offline": "Sin conexión · tus datos se guardan en este celular",
+    "pending": "{{count}} registro sin enviar",
+    "pending_plural": "{{count}} registros sin enviar",
+    "sending": "Enviando...",
+    "sent": "Enviado",
+    "error": "No pudimos enviar {{count}} registros. Se reintenta solo cuando haya conexión.",
+    "sendNow": "Enviar ahora"
+  },
+  "familia": {
+    "buscar": "Buscar familia",
+    "crear": "Crear familia",
+    "guardar": "Guardar familia",
+    "camposObligatorios": "Completá apellido, domicilio y barrio para continuar.",
+    "duplicadoPregunta": "¿Es esta familia?",
+    "duplicadoAviso": "Sin conexión no podemos ver lo que cargaron otras comisiones. Revisaremos duplicados al sincronizar.",
+    "nuevaEnDomicilio": "Crear Familia 2 en este domicilio",
+    "consentimientoRequerido": "Necesitás registrar el consentimiento antes de continuar.",
+    "sinFamilias": "Todavía no valoraste ninguna familia en este barrio. Empezá buscando o creando una."
+  },
+  "barrio": {
+    "seleccionar": "Elegir barrio",
+    "crear": "Crear barrio",
+    "cardinal": "Cardinal",
+    "sinBarrios": "No hay barrios registrados para este CAPS. Creá el primero.",
+    "valoracionPendiente": "Valoración comunitaria pendiente"
+  },
+  "patrones": {
+    "conservado": "Conservado",
+    "alterado": "Alterado",
+    "sinValorar": "Sin valorar",
+    "justificacion": "Justificación",
+    "justificacionRequerida": "Describí brevemente por qué marcás este patrón como alterado.",
+    "evidencia": "Evidencia",
+    "evidenciaRequerida": "Describí la evidencia antes de cerrar este patrón como conservado."
+  },
+  "instrumentos": {
+    "apgar": "APGAR familiar",
+    "holmes": "Holmes y Rahe",
+    "mos": "MOS de apoyo social",
+    "casiNunca": "Casi nunca",
+    "aVeces": "A veces",
+    "casiSiempre": "Casi siempre",
+    "siguiente": "Siguiente instrumento sugerido",
+    "resultado": "Resultado",
+    "interpretacion": "Interpretación"
+  },
+  "genograma": {
+    "tabla": "Integrantes",
+    "foto": "Foto del genograma",
+    "agregarIntegrante": "Agregar integrante",
+    "editarIntegrante": "Editar integrante",
+    "agregarPareja": "Agregar pareja",
+    "personaIndice": "Persona índice",
+    "soloUnaIndice": "Solo puede haber una persona índice por familia.",
+    "adjuntarFoto": "Adjuntar foto del genograma hecho a mano"
+  },
+  "pdf": {
+    "generar": "Generar PDF",
+    "compartir": "Compartir",
+    "guardar": "Guardar",
+    "sinDatosSincronizados": "Contiene datos sin enviar",
+    "elaboracionPropia": "Elaboración propia"
+  },
+  "estados": {
+    "vacio": "Vacío",
+    "cargando": "Cargando...",
+    "error": "Ocurrió un error",
+    "reintentar": "Reintentar",
+    "guardado": "Guardado",
+    "pendienteEnvio": "Pendiente de envío",
+    "enviado": "Enviado",
+    "conflicto": "Revisar duplicado",
+    "nuevaVersion": "Nueva versión disponible",
+    "actualizarAhora": "Actualizar ahora",
+    "almacenamientoLleno": "El almacenamiento del dispositivo está casi lleno. Sincronizá y liberá espacio."
+  },
+  "consentimiento": {
+    "titulo": "Consentimiento informado",
+    "texto": "TODO(belen): texto del consentimiento — redactar con la cátedra o autoridad del servicio antes del piloto.",
+    "acepto": "La persona acepta participar",
+    "fecha": "Fecha de aceptación",
+    "modalidad": "Modalidad",
+    "oral": "Oral",
+    "escrito": "Escrito"
+  },
+  "errores": {
+    "sinConexion": "Sin conexión. Revisá tu red y volvé a intentarlo.",
+    "sesionVencida": "Tu sesión venció. Volvé a ingresar.",
+    "permisoNegado": "No tenés permiso para ver esto.",
+    "noEncontrado": "No encontramos lo que buscás.",
+    "generico": "Algo salió mal. Intentalo de nuevo."
+  }
+}
