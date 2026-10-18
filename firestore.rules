@@ -74,19 +74,27 @@ service cloud.firestore {
 
     // ─── usuarios ────────────────────────────────────────────
     match /usuarios/{uid} {
-      // Cada usuario puede leer su propio documento
-      allow read: if activo() && (request.auth.uid == uid || esSupervisorOAdmin());
-      // Solo el admin crea y actualiza usuarios
-      allow create: if activo() && esAdmin();
+      // Cada usuario puede leer su propio documento (incluso en el primer login antes de estar activo)
+      allow read: if request.auth != null && (request.auth.uid == uid || esSupervisorOAdmin());
+      // Un usuario puede crearse a sí mismo si su email tiene una invitación válida, o un admin
+      allow create: if request.auth != null && (
+        (request.auth.uid == uid && exists(/databases/$(database)/documents/invitaciones/$(request.auth.token.email.lower())))
+        || (activo() && esAdmin())
+      );
       allow update: if activo() && (request.auth.uid == uid || esAdmin());
       allow delete: if false;  // baja lógica
     }
 
     // ─── invitaciones ────────────────────────────────────────
     match /invitaciones/{emailMin} {
-      // El primer login necesita leer su invitación (auth pero sin doc de usuario aún)
-      allow read: if request.auth != null;
-      allow create, update: if activo() && esAdmin();
+      // El usuario autenticado puede leer su propia invitación para activar su cuenta
+      allow read: if request.auth != null && (
+        request.auth.token.email.lower() == emailMin || esSupervisorOAdmin()
+      );
+      // El admin crea y edita; el usuario que la consume puede marcarla como usada
+      allow create: if activo() && esAdmin();
+      allow update: if (activo() && esAdmin())
+        || (request.auth != null && request.auth.token.email.lower() == emailMin);
       allow delete: if false;
     }
 

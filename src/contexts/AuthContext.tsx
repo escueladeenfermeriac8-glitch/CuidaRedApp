@@ -1,15 +1,17 @@
 /**
- * AuthContext — Contexto de autenticación
+ * AuthContext — Contexto de autenticación e invitaciones
+ * DISENO_BASE.md §3, §4, §10
  *
- * Flujo:
+ * Flujo de acceso cerrado:
  * 1. onAuthStateChanged detecta la sesión de Google.
- * 2. Si hay usuario, busca su documento en usuarios/{uid}.
- * 3. Si no existe el documento → verifica invitaciones/{emailMin}.
- * 4. Si hay invitación → crea el documento de usuario.
- * 5. Si no hay invitación → estado 'sin_acceso'.
- *
- * DISENO_BASE.md §3: "Sin invitación, la app muestra 'Tu cuenta todavía
- * no tiene acceso. Pedíselo a quien administra tu organización.'"
+ * 2. Verifica si la sesión venció por inactividad (> 7 días sin uso).
+ * 3. Si hay sesión válida, busca su documento en usuarios/{uid}.
+ * 4. Si el documento existe:
+ *    - activo === true → estado 'activo' (acceso concedido).
+ *    - activo === false → estado 'sin_acceso' (cuenta desactivada).
+ * 5. Si no existe el documento → busca invitaciones/{emailMin}.
+ *    - Invitación válida y no usada → crea usuarios/{uid} y marca invitación como usada.
+ *    - Sin invitación o usada → estado 'sin_acceso'.
  */
 
 import {
@@ -17,6 +19,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useCallback,
   type ReactNode,
 } from 'react'
 import {
@@ -36,31 +39,155 @@ import {
 import { auth, db, googleProvider } from '@/lib/firebase'
 import type { Usuario, Invitacion } from '@/types'
 
-// ─── Estado de sesión ────────────────────────
+// Parámetro de seguridad: 7 días sin uso provocan cierre automático de sesión
+export const DIAS_INACTIVIDAD_MAX = 7
+const MS_POR_DIA = 24 * 60 * 60 * 1000
+const STORAGE_KEY_ULTIMO_ACCESO = 'cuida_ultimo_acceso'
+const STORAGE_KEY_DEVICE_ID = 'cuida_device_id'
+
 export type EstadoSesion =
-  | 'cargando'          // aún no sabemos
-  | 'sin_sesion'        // no hay usuario de Google
-  | 'sin_acceso'        // hay usuario pero no invitación
-  | 'activo'            // sesión válida con rol
+  | 'cargando'          // Inicializando
+  | 'sin_sesion'        // No autenticado
+  | 'sin_acceso'        // Autenticado en Google pero sin invitación autorizada
+  | 'activo'            // Sesión activa con rol y organización
 
 export interface AuthState {
   estado: EstadoSesion
   firebaseUser: User | null
   usuario: Usuario | null
   error: string | null
+  sesionCaducadaPorInactividad: boolean
   login: () => Promise<void>
   logout: () => Promise<void>
+  cambiarCuenta: () => Promise<void>
+  reintentarVerificacion: () => Promise<void>
+  borrarDatosLocales: () => void
 }
 
-// ─── Context ─────────────────────────────────
 const AuthContext = createContext<AuthState | null>(null)
 
-// ─── Provider ────────────────────────────────
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [estado, setEstado] = useState<EstadoSesion>('cargando')
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null)
   const [usuario, setUsuario] = useState<Usuario | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [sesionCaducadaPorInactividad, setSesionCaducadaPorInactividad] = useState<boolean>(false)
+
+  // Actualizar marca de último acceso (throttled a cada 5 minutos)
+  const registrarActividad = useCallback(() => {
+    try {
+      const ahora = Date.now()
+      const ultimo = Number(localStorage.getItem(STORAGE_KEY_ULTIMO_ACCESO) || '0')
+      if (ahora - ultimo > 5 * 60 * 1000) {
+        localStorage.setItem(STORAGE_KEY_ULTIMO_ACCESO, String(ahora))
+      }
+    } catch {
+      // Ignorar errores de acceso a localStorage en modo privado
+    }
+  }, [])
+
+  // Verificar si expiró por inactividad
+  const verificarInactividad = useCallback((): boolean => {
+    try {
+      const ultimoStr = localStorage.getItem(STORAGE_KEY_ULTIMO_ACCESO)
+      if (!ultimoStr) {
+        localStorage.setItem(STORAGE_KEY_ULTIMO_ACCESO, String(Date.now()))
+        return false
+      }
+      const ultimo = Number(ultimoStr)
+      const ahora = Date.now()
+      if (ahora - ultimo > DIAS_INACTIVIDAD_MAX * MS_POR_DIA) {
+        return true
+      }
+      return false
+    } catch {
+      return false
+    }
+  }, [])
+
+  // Proceso de verificación y consumo de invitación
+  const procesarUsuarioOInvitacion = useCallback(async (fbUser: User) => {
+    const usuarioRef = doc(db, 'usuarios', fbUser.uid)
+
+    try {
+      const userSnap = await getDoc(usuarioRef)
+      if (userSnap.exists()) {
+        const data = userSnap.data() as Usuario
+        if (!data.activo) {
+          setEstado('sin_acceso')
+          setUsuario(null)
+          return
+        }
+        setUsuario(data)
+        setEstado('activo')
+        registrarActividad()
+        return
+      }
+
+      // No existe usuario: verificar invitaciones/{emailMin}
+      const emailMin = (fbUser.email ?? '').trim().toLowerCase()
+      if (!emailMin) {
+        setEstado('sin_acceso')
+        setUsuario(null)
+        return
+      }
+
+      const invRef = doc(db, 'invitaciones', emailMin)
+      const invSnap = await getDoc(invRef)
+
+      if (!invSnap.exists()) {
+        setEstado('sin_acceso')
+        setUsuario(null)
+        return
+      }
+
+      const inv = invSnap.data() as Invitacion
+      if (inv.usada) {
+        // Invitación ya consumida previamente
+        setEstado('sin_acceso')
+        setUsuario(null)
+        return
+      }
+
+      // Crear documento del nuevo usuario a partir de su invitación
+      const nuevoUsuario: Omit<Usuario, 'createdAt'> & { createdAt: FieldValue } = {
+        email: fbUser.email ?? '',
+        nombre: fbUser.displayName ?? fbUser.email ?? '',
+        rol: inv.rol,
+        orgId: inv.orgId,
+        capsIds: inv.capsIds ?? [],
+        comision: inv.comision ?? undefined,
+        activo: true,
+        createdAt: serverTimestamp(),
+        createdBy: fbUser.uid,
+        deviceId: getDeviceId(),
+        schemaVersion: 1,
+      }
+
+      await setDoc(usuarioRef, nuevoUsuario)
+      await setDoc(
+        invRef,
+        {
+          usada: true,
+          usadaPorUid: fbUser.uid,
+          usadaAt: serverTimestamp(),
+        },
+        { merge: true }
+      )
+
+      // Leer usuario recién creado
+      const nuevoSnap = await getDoc(usuarioRef)
+      if (nuevoSnap.exists()) {
+        setUsuario(nuevoSnap.data() as Usuario)
+        setEstado('activo')
+        registrarActividad()
+      }
+    } catch (err) {
+      console.error('[Auth] Error al procesar invitación de usuario:', err)
+      setError('Ocurrió un error al verificar tu invitación. Por favor, reintentá.')
+      setEstado('sin_acceso')
+    }
+  }, [registrarActividad])
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (fbUser) => {
@@ -71,66 +198,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      setFirebaseUser(fbUser)
+      // Chequeo de inactividad
+      if (verificarInactividad()) {
+        setSesionCaducadaPorInactividad(true)
+        await signOut(auth)
+        setFirebaseUser(null)
+        setUsuario(null)
+        setEstado('sin_sesion')
+        return
+      }
 
-      // Suscripción en tiempo real al documento del usuario
+      setFirebaseUser(fbUser)
+      await procesarUsuarioOInvitacion(fbUser)
+
+      // Suscripción reactiva para cambios de estado o rol en tiempo real
       const usuarioRef = doc(db, 'usuarios', fbUser.uid)
-      const unsubUsuario = onSnapshot(usuarioRef, async (snap) => {
+      const unsubUsuario = onSnapshot(usuarioRef, (snap) => {
         if (snap.exists()) {
           const data = snap.data() as Usuario
-          if (!data.activo) {
-            setEstado('sin_acceso')
+          if (data.activo) {
+            setUsuario(data)
+            setEstado('activo')
+          } else {
             setUsuario(null)
-            return
-          }
-          setUsuario(data)
-          setEstado('activo')
-          return
-        }
-
-        // No existe el documento → buscar invitación
-        const emailMin = fbUser.email?.toLowerCase() ?? ''
-        const invRef = doc(db, 'invitaciones', emailMin)
-        try {
-          const invSnap = await getDoc(invRef)
-          if (!invSnap.exists()) {
             setEstado('sin_acceso')
-            setUsuario(null)
-            return
           }
-
-          const inv = invSnap.data() as Invitacion
-          if (inv.usada) {
-            // Invitación ya usada pero usuario no existe aún (edge case)
-            setEstado('sin_acceso')
-            return
-          }
-
-          // Crear documento de usuario
-          // serverTimestamp() devuelve FieldValue; Firestore lo convierte a Timestamp al guardar
-          const nuevoUsuario: Omit<Usuario, 'createdAt'> & { createdAt: FieldValue } = {
-            email: fbUser.email ?? '',
-            nombre: fbUser.displayName ?? fbUser.email ?? '',
-            rol: inv.rol,
-            orgId: inv.orgId,
-            capsIds: inv.capsIds,
-            comision: inv.comision,
-            activo: true,
-            createdAt: serverTimestamp(),
-            createdBy: fbUser.uid,
-            deviceId: getDeviceId(),
-            schemaVersion: 1,
-          }
-
-          await setDoc(usuarioRef, nuevoUsuario)
-          // Marcar invitación como usada
-          await setDoc(invRef, { usada: true }, { merge: true })
-
-          // onSnapshot actualizará automáticamente el estado
-        } catch (err) {
-          console.error('[Auth] Error al verificar invitación:', err)
-          setError('Error al verificar tu acceso. Intentalo de nuevo.')
-          setEstado('sin_acceso')
         }
       })
 
@@ -138,39 +230,96 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     return () => unsubAuth()
-  }, [])
+  }, [verificarInactividad, procesarUsuarioOInvitacion])
+
+  // Escuchar eventos del usuario para renovar timestamp de actividad
+  useEffect(() => {
+    if (estado !== 'activo') return
+
+    const handler = () => registrarActividad()
+    window.addEventListener('click', handler, { passive: true })
+    window.addEventListener('keydown', handler, { passive: true })
+    window.addEventListener('focus', handler)
+
+    return () => {
+      window.removeEventListener('click', handler)
+      window.removeEventListener('keydown', handler)
+      window.removeEventListener('focus', handler)
+    }
+  }, [estado, registrarActividad])
 
   const login = async () => {
     setError(null)
+    setSesionCaducadaPorInactividad(false)
+    setEstado('cargando')
     try {
       await signInWithPopup(auth, googleProvider)
-      // onAuthStateChanged se encarga del resto
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err)
-      // Ignorar cierre de popup por el usuario
-      if (msg.includes('popup-closed-by-user')) return
-      console.error('[Auth] Error en login:', err)
-      setError('No pudimos iniciar sesión. Intentalo de nuevo.')
+      if (msg.includes('popup-closed-by-user')) {
+        setEstado(firebaseUser ? 'sin_acceso' : 'sin_sesion')
+        return
+      }
+      console.error('[Auth] Error al iniciar sesión con Google:', err)
+      setError('No pudimos iniciar sesión con Google. Verificá tu conexión y volvé a intentar.')
+      setEstado('sin_sesion')
     }
   }
 
   const logout = async () => {
-    await signOut(auth)
-    setFirebaseUser(null)
-    setUsuario(null)
-    setEstado('sin_sesion')
+    try {
+      await signOut(auth)
+    } finally {
+      setFirebaseUser(null)
+      setUsuario(null)
+      setEstado('sin_sesion')
+    }
+  }
+
+  // Permite desconectar la cuenta actual de Google y abrir el popup para elegir otra
+  const cambiarCuenta = async () => {
+    await logout()
+    await login()
+  }
+
+  // Reintentar verificación tras asignación de invitación por el docente/admin
+  const reintentarVerificacion = async () => {
+    if (!firebaseUser) return
+    setError(null)
+    setEstado('cargando')
+    await procesarUsuarioOInvitacion(firebaseUser)
+  }
+
+  // Borrar datos locales y caché del dispositivo (DISENO_BASE.md §10)
+  const borrarDatosLocales = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY_ULTIMO_ACCESO)
+      // Preservamos el deviceId único para evitar colisiones de códigos familiares
+    } catch {
+      // Ignorar
+    }
   }
 
   return (
     <AuthContext.Provider
-      value={{ estado, firebaseUser, usuario, error, login, logout }}
+      value={{
+        estado,
+        firebaseUser,
+        usuario,
+        error,
+        sesionCaducadaPorInactividad,
+        login,
+        logout,
+        cambiarCuenta,
+        reintentarVerificacion,
+        borrarDatosLocales,
+      }}
     >
       {children}
     </AuthContext.Provider>
   )
 }
 
-// ─── Hook ────────────────────────────────────
 export function useAuth(): AuthState {
   const ctx = useContext(AuthContext)
   if (!ctx) {
@@ -179,13 +328,16 @@ export function useAuth(): AuthState {
   return ctx
 }
 
-// ─── Utilidad: ID de dispositivo ─────────────
 function getDeviceId(): string {
-  const key = 'cuida_device_id'
-  let id = localStorage.getItem(key)
-  if (!id) {
-    id = crypto.randomUUID()
-    localStorage.setItem(key, id)
+  let id = ''
+  try {
+    id = localStorage.getItem(STORAGE_KEY_DEVICE_ID) || ''
+    if (!id) {
+      id = crypto.randomUUID()
+      localStorage.setItem(STORAGE_KEY_DEVICE_ID, id)
+    }
+  } catch {
+    id = 'dev_' + Math.random().toString(36).substring(2, 9)
   }
   return id
 }

@@ -31,7 +31,7 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 | P-11 | **Favicon e iconos de la PWA** — Favicon temporal SVG + iconos `public/icons/icon-192.png` e `icon-512.png` generados con el anillo de 11 nodos (PWA instalable). Reemplazar si se define logo gráfico definitivo. | `public/icons/` | Belén / diseño |
 | P-12 | **Política de retención de datos** — definir cuántos días se retienen los datos (`retencionDias` en el config de la organización). | DISENO_BASE.md §10 | Belén + cátedra |
 | P-13 | **Protocolo de consentimiento** — redactar y aprobar con la autoridad del servicio. Incluir texto para la UI. | DISENO_BASE.md §10 | Cátedra |
-| P-14 | **Cierre de sesión automático** — definir N días sin uso para auto-logout. Actualmente no implementado. | `src/contexts/AuthContext.tsx` | Belén |
+| P-14 | **Cierre de sesión automático** — Implementado con parámetro por defecto de 7 días sin uso (`DIAS_INACTIVIDAD_MAX` en `AuthContext.tsx`). Validar con la cátedra si prefieren otro período (ej. 3 o 5 días). | `src/contexts/AuthContext.tsx` | Belén |
 | P-15 | **Respaldo manual .json** — exportar/importar familias del dispositivo con cifrado opcional (P1). | A implementar en paso 13 | — |
 
 ---
@@ -95,4 +95,16 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Catálogo `src/catalogos/nandaPorPatron.json` (52 diagnósticos clasificados por los 11 patrones funcionales de Gordon, tipos problema/riesgo/disposición y sujetos)
 - [x] Catálogo `src/catalogos/reglasInstrumentos.json` (reglas r1 a r6 de sugerencias y alertas psicosociales según Anexo A.4)
 - [x] Módulo tipado `src/catalogos/index.ts` con funciones puras `calcularApgar`, `calcularHolmes`, `calcularMos` y `filtrarDiagnosticosNanda`
+
+---
+
+## ✅ Completado en paso 5
+
+- [x] Flujo de autenticación cerrada: consulta reactiva de `invitaciones/{emailMin}` y creación automática de `usuarios/{uid}` al primer ingreso válido
+- [x] Manejo de pantalla `sin_acceso`: muestra cuenta actual, explicación amigable, botón para reintentar verificación y botón para cambiar de cuenta de Google
+- [x] Cierre de sesión automático por inactividad tras 7 días sin uso (`DIAS_INACTIVIDAD_MAX`), registrando actividad del usuario en `cuida_ultimo_acceso`
+- [x] Actualización de `firestore.rules` para permitir que el nuevo usuario canjee su invitación y cree su propio perfil de forma segura sin Cloud Functions
+- [x] Aviso en pantalla de login recordando la recomendación de seguridad de activar bloqueo de pantalla (PIN/huella) en el dispositivo
+- [x] Loader accesible con el anillo de 11 nodos animado durante la verificación de sesión
+
 

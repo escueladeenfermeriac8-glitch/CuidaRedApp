@@ -13,8 +13,12 @@
     "loginButton": "Continuar con Google",
     "loginLoading": "Ingresando...",
     "noAccess": "Tu cuenta todavía no tiene acceso. Pedíselo a quien administra tu organización.",
+    "switchAccount": "Ingresar con otra cuenta de Google",
+    "retryAccess": "Reintentar verificación",
     "logout": "Cerrar sesión",
-    "sessionExpired": "Tu sesión venció. Volvé a ingresar."
+    "sessionExpired": "Tu sesión venció. Volvé a ingresar.",
+    "inactivityNotice": "Tu sesión se cerró por inactividad para proteger la privacidad de las familias.",
+    "screenLockWarning": "Recomendación: activá el bloqueo de pantalla (huella o PIN) en este dispositivo para resguardar la confidencialidad."
   },
   "sync": {
     "offline": "Sin conexión · tus datos se guardan en este celular",

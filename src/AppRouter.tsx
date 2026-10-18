@@ -44,13 +44,22 @@ export function AppRouter() {
         style={{
           minHeight: '100dvh',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 'var(--sp-4)',
+          backgroundColor: 'var(--fondo)',
         }}
         role="status"
-        aria-label="Cargando..."
+        aria-live="polite"
       >
-        <span className="text-apagado">Cargando...</span>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style={{ animation: 'spin 1.2s linear infinite' }}>
+          <circle cx="24" cy="24" r="20" stroke="var(--borde-suave)" strokeWidth="3" />
+          <circle cx="24" cy="24" r="20" stroke="var(--lago)" strokeWidth="3" strokeDasharray="30 90" strokeLinecap="round" />
+        </svg>
+        <span className="text-apagado" style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+          Verificando sesión...
+        </span>
       </div>
     )
   }
