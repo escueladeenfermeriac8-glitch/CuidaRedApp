@@ -133,6 +133,21 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Pantalla global de pendientes (`PendientesPage.tsx`) con seguimiento de valoraciones comunitarias y pasos pendientes por familia, filtros territoriales y buscador
 - [x] Enrutamiento en `AppRouter.tsx` para `/familias`, `/familias/:famId` y `/pendientes`
 
+---
+
+## ✅ Completado en paso 8
+
+- [x] Catálogo clínico `src/catalogos/guiaFamiliar.json` con los 11 patrones funcionales de Marjory Gordon adaptados a la familia (Jacquier et al., 2014), preguntas sugeridas, observables y criterios de alteración
+- [x] Pantalla de valoración familiar de patrones (`ValoracionPatronesPage.tsx`) accesible desde la ficha familiar (`/familias/:famId/patrones`)
+- [x] Stepper interactivo de 11 nodos (Gordon Ring) con estado visual en tiempo real (conservado, alterado, sin valorar) y contador de avances
+- [x] Guía clínica desplegable para cada patrón con preguntas indagatorias para la familia y elementos a observar en la visita
+- [x] Registro clínico estructurado de datos subjetivos (manifestado por la familia), datos objetivos (signos del hogar e integrantes) y fuente del dato
+- [x] Veredicto clínico de enfermería con marcación explícita de `conservado` vs. `alterado` y justificación clínica obligatoria para patrones alterados
+- [x] Asistente de diagnósticos NANDA-I candidatos sugeridos por patrón (Anexo E) para preparación de enunciados PES en la Central
+- [x] Autoguardado reactivo y persistencia offline en Firestore en la subcolección `familias/{famId}/valoraciones/{id}` con `tipo: 'patrones'`
+- [x] Sincronización bidireccional con el anillo de 11 patrones de la Ficha Familiar (`FichaFamiliarPage.tsx`)
+
+
 
 
 

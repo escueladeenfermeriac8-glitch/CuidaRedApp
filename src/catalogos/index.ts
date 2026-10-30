@@ -8,6 +8,8 @@ import holmesData from './holmes.json'
 import mosData from './mos.json'
 import nandaData from './nandaPorPatron.json'
 import reglasData from './reglasInstrumentos.json'
+import guiaFamiliarData from './guiaFamiliar.json'
+import guiaComunitariaData from './guiaComunitaria.json'
 
 import type {
   ItemApgar,
@@ -19,7 +21,7 @@ import type {
 } from '@/types'
 
 export type { ItemApgar, ItemHolmes, ItemMos, ItemNanda, CorteInstrumento, SujetoCuidadoNanda }
-export { apgarData, holmesData, mosData, nandaData, reglasData }
+export { apgarData, holmesData, mosData, nandaData, reglasData, guiaFamiliarData, guiaComunitariaData }
 
 // ─── APGAR familiar ──────────────────────────────────
 export interface ResultadoApgar {

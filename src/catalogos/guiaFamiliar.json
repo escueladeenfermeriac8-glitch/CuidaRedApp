@@ -1,0 +1,201 @@
+{
+  "id": "guiaFamiliar",
+  "version": "1.0",
+  "fuente": "Jacquier, Dos Santos, Wolhein y Martínez (2014); Gordon (1994)",
+  "descripcion": "Guía clínica de los 11 patrones funcionales de salud para valoración familiar en atención primaria",
+  "patrones": [
+    {
+      "n": 1,
+      "nombre": "Percepción y manejo de la salud",
+      "descripcion": "Cómo percibe la familia su estado de salud general, sus conductas preventivas, hábitos de cuidado y cumplimiento terapéutico.",
+      "preguntasSugeridas": [
+        "¿Cómo describiría la salud general de su familia en el último año?",
+        "¿Qué hacen en el hogar cuando alguien se enferma? ¿A qué CAPS u hospital acuden?",
+        "¿Tienen los carnets de vacunas al día (niños y adultos)?",
+        "¿Algún integrante toma medicamentos de forma continua o se automedica?",
+        "¿Existen hábitos o prácticas de riesgo en el hogar (tabaco, alcohol, exposición a humo)?"
+      ],
+      "observables": [
+        "Presencia de botiquín o medicamentos visibles y su almacenamiento seguro",
+        "Higiene general del entorno y disposición de agua potable y jabón",
+        "Libretas sanitarias y certificados de salud actualizados",
+        "Señales de autocuidado y conocimiento de controles periódicos"
+      ],
+      "criteriosAlteracion": "Falta de adherencia a tratamientos prescritos, automedicación riesgosa, calendarios de vacunación incompletos, desinterés ante síntomas graves o barreras severas de acceso a la salud."
+    },
+    {
+      "n": 2,
+      "nombre": "Nutricional - metabólico",
+      "descripcion": "Pautas de consumo de alimentos y líquidos de la familia, acceso a nutrientes esenciales y estado nutricional de los miembros.",
+      "preguntasSugeridas": [
+        "¿Cuántas comidas realizan al día habitualmente y qué alimentos consumen con más frecuencia?",
+        "¿Tienen dificultades económicas para comprar alimentos frescos como verduras, frutas, lácteos o carne?",
+        "¿Reciben ayuda de comedores, copa de leche o módulos alimentarios?",
+        "¿Qué tipo de agua consumen para beber y cocinar (red, pozo, hervida)?",
+        "¿Hay algún integrante con bajo peso, sobrepeso, diabetes o requerimientos dietarios especiales?"
+      ],
+      "observables": [
+        "Aspecto físico, piel, mucosas y complexión de los integrantes presentes",
+        "Condiciones de conservación de alimentos (heladera, alacena cerrada, protección de moscas)",
+        "Disponibilidad de agua potable en la cocina",
+        "Presencia de bebidas azucaradas o alimentos ultraprocesados en el hogar"
+      ],
+      "criteriosAlteracion": "Ingesta insuficiente o desbalanceada, inseguridad alimentaria severa, falta de refrigeración segura, agua no potable sin tratamiento o presencia de malnutrición no controlada."
+    },
+    {
+      "n": 3,
+      "nombre": "Eliminación",
+      "descripcion": "Capacidad y regularidad en la eliminación intestinal y urinaria, manejo de excretas y saneamiento del hogar.",
+      "preguntasSugeridas": [
+        "¿Algún integrante de la familia suele tener problemas de estreñimiento, diarrea o dolor al orinar?",
+        "¿Cuentan con baño instalado dentro de la vivienda? ¿Cómo descargan las aguas (pozo o cloaca)?",
+        "¿Utilizan pañales para niños o adultos? ¿Cómo se descartan?",
+        "¿Tienen problemas con roedores, insectos o humedad en el baño?"
+      ],
+      "observables": [
+        "Tipo de servicio sanitario (inodoro con descarga, letrina, pozo ciego, pozo negro)",
+        "Estado de higiene y ventilación del baño o letrina",
+        "Presencia de olores, aguas estancadas o pérdidas en cañerías cercanas al hogar"
+      ],
+      "criteriosAlteracion": "Falta de baño instalado, defecación al aire libre, desborde de aguas servidas, episodios frecuentes de diarrea infecciosa en niños o estreñimiento crónico sin tratamiento."
+    },
+    {
+      "n": 4,
+      "nombre": "Actividad y ejercicio",
+      "descripcion": "Nivel de actividad física, movilidad, tareas domésticas compartidas y uso del tiempo libre.",
+      "preguntasSugeridas": [
+        "¿Qué actividades realizan en su tiempo libre o fines de semana los niños, jóvenes y adultos?",
+        "¿Hay personas con movilidad reducida o discapacidad que requieran ayuda para caminar o asearse?",
+        "¿Cómo se distribuyen los quehaceres de la casa entre los integrantes?",
+        "¿Cuentan con plazas o espacios seguros cerca de la casa para que jueguen los chicos?"
+      ],
+      "observables": [
+        "Movilidad y autonomía de los miembros durante la visita",
+        "Presencia de barreras arquitectónicas en el acceso a la vivienda (escalones altos, pisos irregulares)",
+        "Equipamiento de apoyo visible si corresponde (bastón, andador, silla de ruedas)",
+        "Espacio suficiente para el movimiento cotidiano y recreación en el domicilio"
+      ],
+      "criteriosAlteracion": "Sedentarismo extremo con consecuencias en la salud, sobrecarga exclusiva de tareas en un solo integrante, persona dependiente sin asistencia adecuada o falta de espacio físico seguro para el desarrollo motor infantil."
+    },
+    {
+      "n": 5,
+      "nombre": "Sueño y descanso",
+      "descripcion": "Patrones de descanso, calidad del sueño, horarios y factores ambientales que interfieren en el reposo familiar.",
+      "preguntasSugeridas": [
+        "¿Cuántas horas duermen habitualmente por la noche? ¿Sienten que logran un descanso reparador?",
+        "¿Cómo están organizadas las camas y habitaciones en el hogar?",
+        "¿Hay ruidos molestos, frío, calor o preocupaciones que no los dejen dormir?",
+        "¿Algún integrante toma pastillas para dormir o tiene pesadillas recurrentes?"
+      ],
+      "observables": [
+        "Cantidad de camas y colchones respecto a la cantidad de personas (colecho no planificado, hacinamiento)",
+        "Ventilación y oscurecimiento adecuado en los dormitorios",
+        "Aislamiento térmico y sonoro de las habitaciones"
+      ],
+      "criteriosAlteracion": "Insomnio generalizado, más de dos o tres personas compartiendo una misma cama por falta de plazas, ambiente ruidoso u hostil que impide el descanso nocturno continuo."
+    },
+    {
+      "n": 6,
+      "nombre": "Cognitivo - perceptivo",
+      "descripcion": "Capacidades sensoriales (visión, audición), nivel de comprensión, comunicación y toma de decisiones familiares.",
+      "preguntasSugeridas": [
+        "¿Algún integrante tiene problemas para ver, escuchar o expresarse con claridad?",
+        "¿Comprenden las indicaciones que les brindan los médicos o enfermeros en el centro de salud?",
+        "¿Cómo se toman las decisiones importantes en la familia (dinero, educación, salud)?",
+        "¿Los niños asisten regularmente a la escuela y reciben estímulos para su aprendizaje?"
+      ],
+      "observables": [
+        "Uso de anteojos, audífonos o ayudas técnicas en miembros con déficit sensorial",
+        "Capacidad de comprensión de las preguntas durante la entrevista",
+        "Presencia de libros, cuadernos escolares o materiales didácticos",
+        "Comunicación fluida y respetuosa entre los presentes"
+      ],
+      "criteriosAlteracion": "Déficits sensoriales no compensados (ceguera o sordera sin lentes/audífonos), analfabetismo o dificultad severa para comprender pautas terapéuticas, deserción escolar infantil o toma de decisiones autoritaria que excluye las necesidades básicas."
+    },
+    {
+      "n": 7,
+      "nombre": "Autopercepción - autoconcepto",
+      "descripcion": "Autoestima familiar, identidad, actitudes frente a la propia valía y sentimientos compartidos sobre su situación.",
+      "preguntasSugeridas": [
+        "¿Cómo se sienten respecto a la marcha general de la familia? ¿Qué es lo que más valoran de ustedes?",
+        "¿Sienten que la familia progresa o que se encuentra estancada ante las dificultades?",
+        "¿Han sentido discriminación, vergüenza o aislamiento por vivir en este lugar o por su situación?",
+        "¿Algún miembro de la familia expresa tristeza constante, desánimo o sensación de desesperanza?"
+      ],
+      "observables": [
+        "Contacto visual, postura corporal y tono de voz durante el diálogo",
+        "Sentimiento de dignidad en el trato y cuidado del espacio propio",
+        "Expresiones de orgullo familiar vs. resignación y desesperanza"
+      ],
+      "criteriosAlteracion": "Sentimientos colectivos de impotencia, estigmatización internalizada, depresión manifiesta en referentes o desesperanza sostenida que paraliza la búsqueda de bienestar."
+    },
+    {
+      "n": 8,
+      "nombre": "Rol - relaciones",
+      "descripcion": "Estructura familiar, distribución de funciones y roles de cuidado, vínculos afectivos y manejo de conflictos.",
+      "preguntasSugeridas": [
+        "¿Quién es el principal sostén económico y quién se encarga del cuidado diario de niños y enfermos?",
+        "¿Cómo resuelven las discusiones o desacuerdos cuando surgen problemas en la casa?",
+        "¿Sienten que cuentan con apoyo mutuo o que la carga de cuidado recae en una sola persona?",
+        "¿Tienen familiares cercanos o vecinos con quienes puedan contar en una urgencia?"
+      ],
+      "observables": [
+        "Dinámica de interacción intrafamiliar (afecto, respeto, tensión, silencios llamativos)",
+        "Participación de varios miembros en el cuidado o evidencia de claudicación del cuidador",
+        "Ambiente de seguridad física y emocional para los menores de edad"
+      ],
+      "criteriosAlteracion": "Violencia intrafamiliar física o verbal, sobrecarga extrema y soledad del cuidador principal, aislamiento social total, o falta de protección y cuidado hacia dependientes."
+    },
+    {
+      "n": 9,
+      "nombre": "Sexualidad y reproducción",
+      "descripcion": "Salud reproductiva, métodos anticonceptivos, maternidad/paternidad y educación sexual en el hogar.",
+      "preguntasSugeridas": [
+        "¿Tienen la cantidad de hijos que desean o planifican tener más?",
+        "¿Utilizan algún método anticonceptivo o de cuidado sexual? ¿Tienen acceso a ellos en el CAPS?",
+        "¿Las mujeres de la familia se realizan controles ginecológicos periódicos (PAP, mamografía, controles prenatales)?",
+        "¿Conversan con los adolescentes de la casa sobre cambios corporales y cuidado sexual?"
+      ],
+      "observables": [
+        "Presencia de métodos anticonceptivos o turnos para controles en la libreta",
+        "Embarazos actuales y controles médicos al día",
+        "Apertura para dialogar sobre salud sexual de manera natural y respetuosa"
+      ],
+      "criteriosAlteracion": "Embarazos de riesgo sin control médico, falta de acceso a métodos de planificación deseados, dudas severas sobre anticoncepción o antecedentes de abuso/violencia sexual."
+    },
+    {
+      "n": 10,
+      "nombre": "Adaptación y tolerancia al estrés",
+      "descripcion": "Mecanismos familiares de afrontamiento ante crisis vitales, pérdidas, estrés cotidiano y recursos de contención.",
+      "preguntasSugeridas": [
+        "¿Cuáles han sido los momentos o problemas más difíciles que atravesó la familia en el último año?",
+        "¿Cómo reaccionan o qué hacen juntos para salir adelante cuando las cosas van mal?",
+        "¿Algún integrante recurre al consumo de alcohol u otras sustancias para aliviar la tensión?",
+        "¿Sienten que la situación actual los sobrepasa o logran mantener la calma y el diálogo?"
+      ],
+      "observables": [
+        "Capacidad de resiliencia y unión familiar evidenciada en el relato",
+        "Signos de ansiedad, angustia o tensión aguda en el hogar",
+        "Uso de redes comunitarias o institucionales de apoyo en momentos de crisis"
+      ],
+      "criteriosAlteracion": "Crisis familiares no resueltas (duelo complicado, pérdida laboral traumática), conductas evasivas destructivas (consumo problemático), o desborde emocional colectivo sin contención."
+    },
+    {
+      "n": 11,
+      "nombre": "Valores y creencias",
+      "descripcion": "Creencias espirituales, religiosas, valores familiares y tradiciones culturales que orientan sus decisiones de vida y salud.",
+      "preguntasSugeridas": [
+        "¿Tienen alguna creencia religiosa, espiritual o tradición comunitaria que sea importante para la familia?",
+        "¿Sus creencias los ayudan a sobrellevar momentos de enfermedad o dificultad?",
+        "¿Existen prácticas culturales o tradicionales vinculadas a la salud que acostumbren realizar?",
+        "¿Cuáles son los valores más importantes que desean transmitir a sus hijos?"
+      ],
+      "observables": [
+        "Símbolos religiosos, estampas o elementos de fe presentes en el hogar si los hay",
+        "Coherencia entre las metas familiares y sus prácticas cotidianas",
+        "Respeto intergeneracional por las costumbres y creencias familiares"
+      ],
+      "criteriosAlteracion": "Conflictos éticos o religiosos que impiden tratamientos vitales comprobados (ej. rechazo a vacunación o terapias esenciales por mitos), o sentimientos de culpa y abandono espiritual durante el sufrimiento."
+    }
+  ]
+}

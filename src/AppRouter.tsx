@@ -27,6 +27,7 @@ import { InicioPage } from '@/pages/InicioPage'
 import { ValoracionComunidadPage } from '@/pages/comunidad/ValoracionComunidadPage'
 import { FamiliasPage } from '@/pages/familias/FamiliasPage'
 import { FichaFamiliarPage } from '@/pages/familias/FichaFamiliarPage'
+import { ValoracionPatronesPage } from '@/pages/familias/ValoracionPatronesPage'
 import { PendientesPage } from '@/pages/pendientes/PendientesPage'
 
 // Placeholders de pasos 4-13
@@ -90,6 +91,7 @@ export function AppRouter() {
           <Route path="comunidad/valorar" element={<ValoracionComunidadPage />} />
           <Route path="familias" element={<FamiliasPage />} />
           <Route path="familias/:famId" element={<FichaFamiliarPage />} />
+          <Route path="familias/:famId/patrones" element={<ValoracionPatronesPage />} />
           <Route path="pendientes" element={<PendientesPage />} />
           <Route
             path="sincronizar"
