@@ -188,6 +188,27 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
   - Lista de familias locales con navegación directa a sus fichas e indicadores de sincronización por registro.
 - [x] Integración de `SyncBadge` en tarjetas del listado de familias (`FamiliasPage.tsx`) y en la cabecera de la ficha familiar (`FichaFamiliarPage.tsx`).
 
+---
+
+## ✅ Completado en paso 12
+
+- [x] Layout desktop de la Central (`src/layouts/CentralLayout.tsx`) con barra lateral de navegación estructurada (Panel, Barrios, Familias, Diagnósticos, Duplicados) y acceso bidireccional a la app de campo.
+- [x] Panel de supervisión docente (`src/pages/central/CentralDashboardPage.tsx`) con KPIs en tiempo real (familias, barrios, porcentaje con consentimiento, valoraciones completas) y progreso por sector cardinal.
+- [x] Supervisión de comunidades y barrios (`src/pages/central/CentralBarriosPage.tsx`) con selector de barrios, matriz estratégica FODA en cuadrante 2x2 y desglose de patrones alterados.
+- [x] Tabla densa de familias (`src/pages/central/CentralFamiliasPage.tsx`) con filtros combinados (CAPS, barrio, estado, consentimiento), buscador instantáneo y exportación de padrón a formato CSV (P1).
+- [x] Asistente diagnóstico NANDA en formato PES (`src/pages/central/CentralDiagnosticosPage.tsx`):
+  - Vista en dos columnas: datos y justificaciones de patrones familiares vs. candidatos de `nandaPorPatron.json`.
+  - Redactor guiado de enunciados en formato PES (Problema, Etiología, Signos y Síntomas).
+  - Flujo de supervisión docente: `propuesto` → `confirmado` → `descartado`.
+- [x] Plan de intervenciones y registro de evoluciones SOEP (`src/pages/central/CentralPlanPage.tsx`):
+  - Banco de intervenciones fijables con metas familiares, responsable y fecha.
+  - Registro cronológico longitudinal en formato clínico SOEP (Subjetivo, Objetivo, Evaluación, Plan) con autoría y fecha.
+- [x] Herramienta docente para control y fusión de duplicados (`src/pages/central/CentralDuplicadosPage.tsx`):
+  - Algoritmo de distancia de edición para apellidos compuestos y direcciones similares.
+  - Comparativa lado a lado y resolución como "Familia 2 conviviente" o fusión con borrado lógico trazable.
+- [x] Configuración de rutas `/central/*` en `AppRouter.tsx` y enlace contextual en la pantalla de inicio para supervisores.
+
+
 
 
 

@@ -31,6 +31,13 @@ import { ValoracionPatronesPage } from '@/pages/familias/ValoracionPatronesPage'
 import { InstrumentosPage } from '@/pages/familias/InstrumentosPage'
 import { PendientesPage } from '@/pages/pendientes/PendientesPage'
 import { SincronizarPage } from '@/pages/sincronizar/SincronizarPage'
+import { CentralLayout } from '@/layouts/CentralLayout'
+import { CentralDashboardPage } from '@/pages/central/CentralDashboardPage'
+import { CentralBarriosPage } from '@/pages/central/CentralBarriosPage'
+import { CentralFamiliasPage } from '@/pages/central/CentralFamiliasPage'
+import { CentralDiagnosticosPage } from '@/pages/central/CentralDiagnosticosPage'
+import { CentralPlanPage } from '@/pages/central/CentralPlanPage'
+import { CentralDuplicadosPage } from '@/pages/central/CentralDuplicadosPage'
 
 // Placeholders de pasos 4-13
 const Placeholder = ({ titulo }: { titulo: string }) => (
@@ -100,11 +107,16 @@ export function AppRouter() {
           <Route path="perfil" element={<Placeholder titulo="Perfil" />} />
         </Route>
 
-        {/* Central web — placeholder paso 12 */}
-        <Route
-          path="/central/*"
-          element={<Placeholder titulo="Central (paso 12)" />}
-        />
+        {/* Central web (desktop) */}
+        <Route path="/central" element={<CentralLayout />}>
+          <Route index element={<CentralDashboardPage />} />
+          <Route path="barrios" element={<CentralBarriosPage />} />
+          <Route path="familias" element={<CentralFamiliasPage />} />
+          <Route path="diagnosticos" element={<CentralDiagnosticosPage />} />
+          <Route path="familias/:famId/diagnosticos" element={<CentralDiagnosticosPage />} />
+          <Route path="familias/:famId/plan" element={<CentralPlanPage />} />
+          <Route path="duplicados" element={<CentralDuplicadosPage />} />
+        </Route>
 
         {/* 404 */}
         <Route path="*" element={<Navigate to="/" replace />} />

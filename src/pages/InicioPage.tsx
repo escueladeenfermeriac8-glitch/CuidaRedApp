@@ -193,6 +193,26 @@ export function InicioPage() {
           </div>
           <ChevronRight size={20} className="accion-flecha" />
         </button>
+
+        {/* Acceso a la Central Web para supervisores/docentes */}
+        {(usuario?.rol === 'supervisor' || usuario?.rol === 'admin' || usuario?.rol === 'admin_global') && (
+          <button
+            type="button"
+            className="tarjeta tarjeta-accion accion-central-link"
+            onClick={() => navigate('/central')}
+          >
+            <div className="accion-icono-circulo central-circulo">
+              <Building2 size={26} />
+            </div>
+            <div className="accion-textos">
+              <span className="accion-titulo">Central de Supervisión Web</span>
+              <span className="accion-desc">
+                Panel docente, diagnósticos NANDA en PES, plan de cuidados y control de duplicados
+              </span>
+            </div>
+            <ChevronRight size={20} className="accion-flecha" />
+          </button>
+        )}
       </section>
 
       {/* Resumen rápido de pendientes */}
