@@ -81,7 +81,10 @@ export const ModalCrearBarrio: React.FC<ModalCrearBarrioProps> = ({
         createdAt: serverTimestamp(),
       }
 
-      await setDoc(nuevoBarrioRef, nuevoBarrioData)
+      await Promise.race([
+        setDoc(nuevoBarrioRef, nuevoBarrioData),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
 
       const barrioCreado: Barrio = {
         ...nuevoBarrioData,

@@ -22,6 +22,7 @@ import {
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
+  disableNetwork,
 } from 'firebase/firestore'
 
 export const isFirebaseConfigured = Boolean(
@@ -42,7 +43,7 @@ const firebaseConfig = {
 if (import.meta.env.DEV && !isFirebaseConfigured) {
   console.info(
     '[CuidaRed] Ejecutando en modo de prueba local (sin variables de Firebase reales).\n' +
-    'Podés usar los perfiles de demostración en el login o completar .env.dev para conectar a la nube.'
+    'Operando en modo local offline instantáneo con IndexedDB.'
   )
 }
 
@@ -63,3 +64,9 @@ export const db = initializeFirestore(app, {
     tabManager: persistentMultipleTabManager(),
   }),
 })
+
+// Si no hay configuración de Firebase en la nube, desactivar intentos de conexión
+// para que todas las operaciones lean y escriban en IndexedDB inmediatamente sin bloquear la UI
+if (!isFirebaseConfigured) {
+  disableNetwork(db).catch(() => {})
+}

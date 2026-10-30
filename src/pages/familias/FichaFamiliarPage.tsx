@@ -132,19 +132,18 @@ export function FichaFamiliarPage() {
 
         const data = { id: docSnap.id, ...docSnap.data() } as Familia
         setFamilia(data)
-
-        // Cargar barrio si corresponde
-        if (data.barrioId) {
-          try {
-            const bSnap = await getDoc(doc(db, 'barrios', data.barrioId))
-            if (bSnap.exists()) {
-              setBarrio({ id: bSnap.id, ...bSnap.data() } as Barrio)
-            }
-          } catch (e) {
-            console.error('Error cargando barrio:', e)
-          }
-        }
         setCargando(false)
+
+        // Cargar barrio en segundo plano sin demorar la pantalla
+        if (data.barrioId) {
+          getDoc(doc(db, 'barrios', data.barrioId))
+            .then((bSnap) => {
+              if (bSnap.exists()) {
+                setBarrio({ id: bSnap.id, ...bSnap.data() } as Barrio)
+              }
+            })
+            .catch((e) => console.error('Error cargando barrio:', e))
+        }
       },
       (err) => {
         console.error('Error suscribiendo familia:', err)

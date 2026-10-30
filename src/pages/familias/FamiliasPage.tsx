@@ -201,7 +201,11 @@ export function FamiliasPage() {
         createdAt: serverTimestamp(),
       }
 
-      await setDoc(famRef, nuevaFamiliaData)
+      // Guardar en Firestore (local IndexedDB prioritario)
+      await Promise.race([
+        setDoc(famRef, nuevaFamiliaData),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
 
       setModalAbierto(false)
       navigate(`/familias/${famRef.id}`)
