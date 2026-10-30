@@ -35,6 +35,7 @@ import type {
 import { ConsentimientoModal } from '@/components/familias/ConsentimientoModal'
 import { IntegrantesManager } from '@/components/familias/IntegrantesManager'
 import { ViviendaCartografiaSection } from '@/components/familias/ViviendaCartografiaSection'
+import { generarPdfFamiliar, descargarBlobPdf } from '@/lib/pdf-generador'
 import {
   ArrowLeft,
   ShieldAlert,
@@ -49,6 +50,7 @@ import {
   Download,
   ChevronRight,
   UserCheck,
+  FileText,
 } from 'lucide-react'
 
 // Nombres cortos de los 11 patrones de Gordon
@@ -82,7 +84,36 @@ export function FichaFamiliarPage() {
 
   const [tabActiva, setTabActiva] = useState<TabFicha>('resumen')
   const [modalConsentimientoAbierto, setModalConsentimientoAbierto] = useState(false)
-  const [avisoPdf, setAvisoPdf] = useState(false)
+  const [modalPdfAbierto, setModalPdfAbierto] = useState(false)
+  const [generandoPdf, setGenerandoPdf] = useState(false)
+  const [errorPdf, setErrorPdf] = useState<string | null>(null)
+
+  const handleExportarPdf = async () => {
+    if (!familia) return
+    setGenerandoPdf(true)
+    setErrorPdf(null)
+
+    try {
+      const pdfBytes = await generarPdfFamiliar({
+        familia,
+        barrio,
+        integrantes,
+        valoraciones,
+        nombreValorador: usuario?.nombre || 'Estudiante de Enfermería',
+        rolValorador: usuario?.rol || 'valorador',
+      })
+
+      const codLimpio = (familia.codigoFamiliar || 'FAM').replace(/[^a-zA-Z0-9_-]/g, '_')
+      const apeLimpio = (familia.apellido || 'Familiar').replace(/[^a-zA-Z0-9_-]/g, '_')
+      descargarBlobPdf(pdfBytes, `Ficha_${codLimpio}_${apeLimpio}.pdf`)
+      setModalPdfAbierto(false)
+    } catch (err) {
+      console.error('Error generando PDF:', err)
+      setErrorPdf('No se pudo generar el documento PDF. Verificá los datos.')
+    } finally {
+      setGenerandoPdf(false)
+    }
+  }
 
   // Cargar datos en tiempo real de la familia
   useEffect(() => {
@@ -382,7 +413,7 @@ export function FichaFamiliarPage() {
           <button
             type="button"
             className="btn btn-outline btn-sm"
-            onClick={() => setAvisoPdf(true)}
+            onClick={() => setModalPdfAbierto(true)}
             title="Exportar Ficha Familiar a PDF"
           >
             <Download size={14} />
@@ -843,23 +874,63 @@ export function FichaFamiliarPage() {
         onConsentimientoGuardado={handleConsentimientoGuardado}
       />
 
-      {/* Modal / Alerta amigable aviso PDF (Paso 10) */}
-      {avisoPdf && (
-        <div className="modal-overlay" role="dialog" aria-modal="true">
-          <div className="modal-contenido tarjeta stack">
-            <h3 className="h4">Generación de PDF de la Ficha Familiar</h3>
-            <p className="text-apagado" style={{ fontSize: '0.85rem' }}>
-              El motor de exportación offline de ficha familiar en formato PDF estandarizado
-              (con genograma manual/árbol, vivienda, 11 patrones y puntajes de instrumentos)
-              se integra en el <strong>Paso 10</strong>.
+      {/* Modal interactivo de Exportación de PDF Offline (Paso 10) */}
+      {modalPdfAbierto && (
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-pdf-titulo">
+          <div className="modal-contenido tarjeta stack" style={{ maxWidth: '480px' }}>
+            <header style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+              <FileText size={22} color="var(--azul)" />
+              <div>
+                <h3 id="modal-pdf-titulo" className="h4" style={{ margin: 0 }}>
+                  Exportar Ficha Familiar (PDF)
+                </h3>
+                <span className="text-apagado" style={{ fontSize: '0.8rem' }}>
+                  Documento estructurado A4 para el servicio y la cátedra
+                </span>
+              </div>
+            </header>
+
+            {errorPdf && (
+              <div className="alerta-error" role="alert">
+                <AlertCircle size={16} />
+                <span>{errorPdf}</span>
+              </div>
+            )}
+
+            <div className="resumen-pdf-incluido stack" style={{ background: 'var(--papel)', padding: 'var(--sp-3)', borderRadius: 'var(--r-campo)', fontSize: '0.82rem' }}>
+              <strong>Contenido incluido en el informe:</strong>
+              <ul style={{ paddingLeft: 'var(--sp-4)', margin: 0, display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <li>Encabezado: CAPS, barrio ({barrio?.etiqueta ?? 's/d'}), código {familia.codigoFamiliar}</li>
+                <li>Identificación y consentimiento informado (Ley 25.326)</li>
+                <li>{integrantes.length} integrante(s) registrado(s) con condiciones de salud</li>
+                <li>Vivienda, cálculo de hacinamiento y foto/árbol de genograma</li>
+                <li>Valoración de los 11 patrones con anillo vectorial de Gordon</li>
+                <li>Resultados de APGAR, Holmes y Rahe, y MOS de apoyo social</li>
+                <li>Líneas para firma del estudiante y del docente supervisor</li>
+              </ul>
+            </div>
+
+            <p className="text-apagado" style={{ fontSize: '0.78rem', margin: 0 }}>
+              El PDF se genera 100% en tu dispositivo y se descarga de inmediato, incluso sin conexión a internet.
             </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)' }}>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
+              <button
+                type="button"
+                className="btn btn-outline btn-sm"
+                onClick={() => setModalPdfAbierto(false)}
+                disabled={generandoPdf}
+              >
+                Cancelar
+              </button>
               <button
                 type="button"
                 className="btn btn-primario btn-sm"
-                onClick={() => setAvisoPdf(false)}
+                onClick={handleExportarPdf}
+                disabled={generandoPdf}
               >
-                Entendido
+                <Download size={14} />
+                <span>{generandoPdf ? 'Generando PDF...' : 'Descargar PDF'}</span>
               </button>
             </div>
           </div>

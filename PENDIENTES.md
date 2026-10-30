@@ -158,6 +158,21 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Motor de sugerencias y alertas psicosociales (`reglasInstrumentos.json`): detección reactiva de disfunción familiar y alerta de riesgo psicosocial crítico cuando coexisten alto estrés (&ge;150 UCV) y bajo apoyo social
 - [x] Persistencia reactiva offline en Firestore (`familias/{famId}/valoraciones`) e integración con la Ficha Familiar y la Campanita de Pendientes
 
+---
+
+## ✅ Completado en paso 10
+
+- [x] Motor de exportación PDF offline (`src/lib/pdf-generador.ts`) con `pdf-lib` (sin requerir conexión a internet ni llamadas a servidores externos)
+- [x] Generación de documento A4 estructurado con membrete institucional, CAPS, barrio y código familiar
+- [x] Sección de identificación y consentimiento informado según Ley 25.326 de Protección de Datos Personales
+- [x] Tabla de composición del hogar e integrantes con condiciones clínicas registradas y persona índice
+- [x] Sección de vivienda y cartografía con cálculo de hacinamiento e inserción de la foto del genograma manual en canvas (P0)
+- [x] Renderizado vectorial del Anillo de 11 nodos (Gordon Ring) con códigos de color de estado (verde conservado, ámbar alterado, gris sin valorar) y detalle de los 11 patrones
+- [x] Resumen cuantitativo y cortes clínicos de los tres instrumentos: APGAR, Holmes y Rahe, y MOS de apoyo social
+- [x] Líneas de firma y matrícula para el estudiante valorador y supervisor/a docente
+- [x] Integración de modal interactivo y descarga directa en la Ficha Familiar (`FichaFamiliarPage.tsx`)
+
+
 
 
 
