@@ -22,6 +22,7 @@ import {
   generarCodigoFamiliar,
 } from '@/lib/normalizacion'
 import type { Familia, Barrio, EstadoFamilia } from '@/types'
+import { SyncBadge } from '@/components/sync/SyncBadge'
 import {
   Search,
   UserPlus,
@@ -336,6 +337,7 @@ export function FamiliasPage() {
                     <div className="card-titulos">
                       <div className="codigo-fila">
                         <span className="badge-codigo">{fam.codigoFamiliar}</span>
+                        <SyncBadge estado={fam.syncEstado ?? (fam.createdAt ? 'enviado' : 'pendiente')} />
                         {fam.ordenEnDomicilio > 1 && (
                           <span className="badge-orden">Familia {fam.ordenEnDomicilio}</span>
                         )}

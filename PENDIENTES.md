@@ -32,7 +32,7 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 | P-12 | **Política de retención de datos** — definir cuántos días se retienen los datos (`retencionDias` en el config de la organización). | DISENO_BASE.md §10 | Belén + cátedra |
 | P-13 | **Protocolo de consentimiento** — redactar y aprobar con la autoridad del servicio. Incluir texto para la UI. | DISENO_BASE.md §10 | Cátedra |
 | P-14 | **Cierre de sesión automático** — Implementado con parámetro por defecto de 7 días sin uso (`DIAS_INACTIVIDAD_MAX` en `AuthContext.tsx`). Validar con la cátedra si prefieren otro período (ej. 3 o 5 días). | `src/contexts/AuthContext.tsx` | Belén |
-| P-15 | **Respaldo manual .json** — exportar/importar familias del dispositivo con cifrado opcional (P1). | A implementar en paso 13 | — |
+| P-15 | **Respaldo manual .json** — exportar copia de seguridad en JSON desde el dispositivo (P1). Implementado en Paso 11 (`useSync` y `SincronizarPage`). Importación/restauración de emergencia para Ola 2. | `src/hooks/useSync.ts`, `src/pages/sincronizar/SincronizarPage.tsx` | Antigravity |
 
 ---
 
@@ -171,6 +171,23 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Resumen cuantitativo y cortes clínicos de los tres instrumentos: APGAR, Holmes y Rahe, y MOS de apoyo social
 - [x] Líneas de firma y matrícula para el estudiante valorador y supervisor/a docente
 - [x] Integración de modal interactivo y descarga directa en la Ficha Familiar (`FichaFamiliarPage.tsx`)
+
+---
+
+## ✅ Completado en paso 11
+
+- [x] Componente `SyncBadge` (`src/components/sync/SyncBadge.tsx`) con 3 estados (`enviado`, `pendiente`, `revisar`), íconos semánticos accesibles y tokens de color (`--ok`, `--lago`, `--critico`).
+- [x] Hook `useSync` (`src/hooks/useSync.ts`) con monitoreo reactivo de `snapshot.metadata.hasPendingWrites`, contador de registros locales, detección de online/offline, reconexión de red (`enableNetwork`) y resolución de escrituras pendientes (`waitForPendingWrites`).
+- [x] Franja offline dinámica en `AppLayout` (`src/layouts/AppLayout.tsx`) con indicación en tiempo real de registros pendientes y enlace directo a `/sincronizar`.
+- [x] Pantalla de sincronización y estado offline (`src/pages/sincronizar/SincronizarPage.tsx`):
+  - Diagnóstico de conexión en tiempo real (Wifi / offline) y estado de la caché persistente IndexedDB.
+  - Métricas visuales de registros (enviados, pendientes, a revisar).
+  - Botón "Sincronizar ahora" con animación de progreso y confirmación de fecha/hora.
+  - Respaldo manual en archivo `.json` de emergencia (DISENO_BASE.md §4 P1).
+  - Mecanismo de borrado seguro de datos locales sincronizados conforme a la Ley 25.326 de Protección de Datos Personales (DISENO_BASE.md §10), protegiendo registros pendientes.
+  - Lista de familias locales con navegación directa a sus fichas e indicadores de sincronización por registro.
+- [x] Integración de `SyncBadge` en tarjetas del listado de familias (`FamiliasPage.tsx`) y en la cabecera de la ficha familiar (`FichaFamiliarPage.tsx`).
+
 
 
 

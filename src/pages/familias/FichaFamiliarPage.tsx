@@ -36,6 +36,7 @@ import { ConsentimientoModal } from '@/components/familias/ConsentimientoModal'
 import { IntegrantesManager } from '@/components/familias/IntegrantesManager'
 import { ViviendaCartografiaSection } from '@/components/familias/ViviendaCartografiaSection'
 import { generarPdfFamiliar, descargarBlobPdf } from '@/lib/pdf-generador'
+import { SyncBadge } from '@/components/sync/SyncBadge'
 import {
   ArrowLeft,
   ShieldAlert,
@@ -451,6 +452,7 @@ export function FichaFamiliarPage() {
           <div className="titulos-bloque">
             <div className="etiquetas-fila">
               <span className="badge-codigo">{familia.codigoFamiliar}</span>
+              <SyncBadge estado={familia.syncEstado ?? (familia.createdAt ? 'enviado' : 'pendiente')} />
               {familia.ordenEnDomicilio > 1 && (
                 <span className="badge-orden">Familia {familia.ordenEnDomicilio}</span>
               )}

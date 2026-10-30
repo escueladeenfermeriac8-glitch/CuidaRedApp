@@ -30,6 +30,7 @@ import { FichaFamiliarPage } from '@/pages/familias/FichaFamiliarPage'
 import { ValoracionPatronesPage } from '@/pages/familias/ValoracionPatronesPage'
 import { InstrumentosPage } from '@/pages/familias/InstrumentosPage'
 import { PendientesPage } from '@/pages/pendientes/PendientesPage'
+import { SincronizarPage } from '@/pages/sincronizar/SincronizarPage'
 
 // Placeholders de pasos 4-13
 const Placeholder = ({ titulo }: { titulo: string }) => (
@@ -95,10 +96,7 @@ export function AppRouter() {
           <Route path="familias/:famId/patrones" element={<ValoracionPatronesPage />} />
           <Route path="familias/:famId/instrumentos" element={<InstrumentosPage />} />
           <Route path="pendientes" element={<PendientesPage />} />
-          <Route
-            path="sincronizar"
-            element={<Placeholder titulo="Sincronizar" />}
-          />
+          <Route path="sincronizar" element={<SincronizarPage />} />
           <Route path="perfil" element={<Placeholder titulo="Perfil" />} />
         </Route>
 
