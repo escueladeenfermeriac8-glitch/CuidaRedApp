@@ -211,3 +211,31 @@ export function validarIntegrante(
     advertencias,
   }
 }
+
+/**
+ * Valida el conjunto completo de integrantes y parejas de una familia para el genograma.
+ */
+export function validarGenograma(
+  integrantes: IntegranteConId[],
+  parejas: Pareja[] = [],
+): ResultadoValidacion {
+  const todosErrores: string[] = []
+  const todasAdvertencias: string[] = []
+
+  for (const integrante of integrantes) {
+    const res = validarIntegrante(integrantes, integrante, integrante.id)
+    todosErrores.push(...res.errores)
+    todasAdvertencias.push(...res.advertencias)
+  }
+
+  for (const pareja of parejas) {
+    const errPareja = validarPareja(integrantes, pareja)
+    todosErrores.push(...errPareja)
+  }
+
+  return {
+    valido: todosErrores.length === 0,
+    errores: Array.from(new Set(todosErrores)),
+    advertencias: Array.from(new Set(todasAdvertencias)),
+  }
+}

@@ -25,6 +25,9 @@ import { AppLayout } from '@/layouts/AppLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { InicioPage } from '@/pages/InicioPage'
 import { ValoracionComunidadPage } from '@/pages/comunidad/ValoracionComunidadPage'
+import { FamiliasPage } from '@/pages/familias/FamiliasPage'
+import { FichaFamiliarPage } from '@/pages/familias/FichaFamiliarPage'
+import { PendientesPage } from '@/pages/pendientes/PendientesPage'
 
 // Placeholders de pasos 4-13
 const Placeholder = ({ titulo }: { titulo: string }) => (
@@ -85,11 +88,9 @@ export function AppRouter() {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<InicioPage />} />
           <Route path="comunidad/valorar" element={<ValoracionComunidadPage />} />
-          <Route path="familias" element={<Placeholder titulo="Familias" />} />
-          <Route
-            path="pendientes"
-            element={<Placeholder titulo="Pendientes" />}
-          />
+          <Route path="familias" element={<FamiliasPage />} />
+          <Route path="familias/:famId" element={<FichaFamiliarPage />} />
+          <Route path="pendientes" element={<PendientesPage />} />
           <Route
             path="sincronizar"
             element={<Placeholder titulo="Sincronizar" />}

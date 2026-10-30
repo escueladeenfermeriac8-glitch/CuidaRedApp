@@ -120,5 +120,19 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Banco asistido de Oportunidades y Amenazas con cálculo automático de prioridades 1 a 5 según Anexo B.4
 - [x] Renovación de la pantalla de Inicio (`InicioPage.tsx`) con badge de barrio activo, selector territorial, campana de pendientes y accesos directos a valorar comunidad y familia
 
+---
+
+## ✅ Completado en paso 7
+
+- [x] Búsqueda y creación de familias (`FamiliasPage.tsx`) con normalización de domicilio, tolerancia a errores ortográficos (Levenshtein ≤ 2) y advertencia visual "¿Es esta familia?"
+- [x] Generación estandarizada de código familiar `{CAPS}-{AA}-{seq}` y soporte explícito para convivencia de múltiples familias en el mismo domicilio ("Familia 2")
+- [x] Modal de consentimiento informado (`ConsentimientoModal.tsx`) con bloqueo de avances, modalidad oral/escrita, fecha y registro del valorador (Ley 25.326)
+- [x] Gestor de integrantes del hogar y genograma (`IntegrantesManager.tsx`) con alta rápida, parentesco, persona índice, condiciones de salud y validación clínica en tiempo real (ADENDA §5)
+- [x] Sección de vivienda y cartografía (`ViviendaCartografiaSection.tsx`) con cálculo automático de hacinamiento por habitante/habitación, servicios básicos y foto del genograma manual con compresión en canvas (P0)
+- [x] Ficha familiar integral (`FichaFamiliarPage.tsx`) con cabecera, anillo de 11 patrones de Gordon interactivo, campanita de pendientes reactiva y pestañas de trabajo
+- [x] Pantalla global de pendientes (`PendientesPage.tsx`) con seguimiento de valoraciones comunitarias y pasos pendientes por familia, filtros territoriales y buscador
+- [x] Enrutamiento en `AppRouter.tsx` para `/familias`, `/familias/:famId` y `/pendientes`
+
+
 
 
