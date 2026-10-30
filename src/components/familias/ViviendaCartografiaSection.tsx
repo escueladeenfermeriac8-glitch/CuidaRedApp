@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react'
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import type { Vivienda, Cartografia } from '@/types'
 import {
@@ -135,11 +135,14 @@ export const ViviendaCartografiaSection: React.FC<ViviendaCartografiaSectionProp
 
     try {
       const famRef = doc(db, 'familias', famId)
-      await updateDoc(famRef, {
-        vivienda: nuevaVivienda,
-        cartografia: nuevaCartografia,
-        updatedAt: serverTimestamp(),
-      })
+      await Promise.race([
+        setDoc(famRef, {
+          vivienda: nuevaVivienda,
+          cartografia: nuevaCartografia,
+          updatedAt: serverTimestamp(),
+        }, { merge: true }),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
 
       if (onGuardado) {
         onGuardado(nuevaVivienda, nuevaCartografia)

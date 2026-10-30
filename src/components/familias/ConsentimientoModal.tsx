@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react'
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, setDoc, Timestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import type { Consentimiento } from '@/types'
@@ -47,27 +47,23 @@ export const ConsentimientoModal: React.FC<ConsentimientoModalProps> = ({
 
     try {
       const famRef = doc(db, 'familias', famId)
-      const dataConsentimiento = {
+      const dataConsentimiento: Consentimiento = {
         otorgado: true,
         modalidad,
-        fecha: serverTimestamp(),
+        fecha: Timestamp.now(),
         registradoPor: firebaseUser?.uid ?? 'anon',
       }
 
-      await updateDoc(famRef, {
-        consentimiento: dataConsentimiento,
-      })
+      await Promise.race([
+        setDoc(famRef, { consentimiento: dataConsentimiento }, { merge: true }),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
 
-      onConsentimientoGuardado({
-        otorgado: true,
-        modalidad,
-        registradoPor: firebaseUser?.uid ?? 'anon',
-        fecha: { seconds: Math.floor(Date.now() / 1000), nanoseconds: 0 } as any,
-      })
+      onConsentimientoGuardado(dataConsentimiento)
       onCerrar()
     } catch (err) {
       console.error('[Consentimiento] Error al guardar:', err)
-      setError('No se pudo registrar el consentimiento. Verificá tu conexión o reintentá.')
+      setError('No se pudo registrar el consentimiento. Reintentá.')
     } finally {
       setGuardando(false)
     }
