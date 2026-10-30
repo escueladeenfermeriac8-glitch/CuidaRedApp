@@ -228,7 +228,7 @@ p, li, label, span {
   text-transform: none;
 }
 
-.campo input,
+.campo input:not([type="checkbox"]):not([type="radio"]),
 .campo select,
 .campo textarea {
   font-family: var(--font-ui);
@@ -244,7 +244,17 @@ p, li, label, span {
   width: 100%;
 }
 
-.campo input:focus,
+.campo input[type="checkbox"],
+.campo input[type="radio"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  margin: 0 !important;
+  cursor: pointer;
+  accent-color: var(--azul);
+}
+
+.campo input:not([type="checkbox"]):not([type="radio"]):focus,
 .campo select:focus,
 .campo textarea:focus {
   border-color: var(--azul-medio);

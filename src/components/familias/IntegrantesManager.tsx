@@ -31,6 +31,7 @@ import {
   Users,
   AlertTriangle,
   Trash2,
+  Edit2,
   X,
   Plus,
   Square,
@@ -81,10 +82,11 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
   const [parejas, setParejas] = useState<Pareja[]>([])
   const [cargando, setCargando] = useState(true)
   const [modalAbierto, setModalAbierto] = useState(false)
+  const [integranteEnEdicion, setIntegranteEnEdicion] = useState<IntegranteConId | null>(null)
   const [guardando, setGuardando] = useState(false)
   const [errorForm, setErrorForm] = useState<string | null>(null)
 
-  // Formulario nuevo integrante
+  // Formulario integrante
   const [parentesco, setParentesco] = useState('Hijo / Hija')
   const [sexo, setSexo] = useState<SexoBiologico>('mujer')
   const [edadAprox, setEdadAprox] = useState<string>('')
@@ -152,12 +154,62 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
     )
   }
 
-  // Guardar nuevo integrante
+  // Abrir modal para crear
+  const abrirModalCrear = () => {
+    setIntegranteEnEdicion(null)
+    setErrorForm(null)
+    const hayIndice = integrantes.some((i) => i.esIndice)
+    setEsIndice(!hayIndice)
+    setParentesco(!hayIndice ? 'Referente (Índice)' : 'Hijo / Hija')
+    setSexo('mujer')
+    setEdadAprox('')
+    setConviveActual(true)
+    setFallecido(false)
+    setMadreId('')
+    setPadreId('')
+    setTipoFiliacion('biologica')
+    setCondicionesSeleccionadas([])
+    setOtraCondicion('')
+    setModalAbierto(true)
+  }
+
+  // Abrir modal para editar
+  const abrirModalEditar = (int: IntegranteConId) => {
+    setIntegranteEnEdicion(int)
+    setErrorForm(null)
+    setParentesco(int.parentesco || 'Hijo / Hija')
+    setSexo(int.sexo || 'mujer')
+    setEdadAprox(int.edadAprox != null ? String(int.edadAprox) : '')
+    setConviveActual(int.conviveActual ?? true)
+    setEsIndice(int.esIndice ?? false)
+    setFallecido(int.fallecido ?? false)
+    setMadreId(int.madreId || '')
+    setPadreId(int.padreId || '')
+    setTipoFiliacion(int.tipoFiliacion || 'biologica')
+
+    const condsNombres: string[] = []
+    let otra = ''
+    if (int.condiciones) {
+      int.condiciones.forEach((c) => {
+        if (CONDICIONES_FRECUENTES.includes(c.nombre)) {
+          condsNombres.push(c.nombre)
+        } else {
+          otra = c.nombre
+        }
+      })
+    }
+    setCondicionesSeleccionadas(condsNombres)
+    setOtraCondicion(otra)
+    setModalAbierto(true)
+  }
+
+  // Guardar integrante (Creación o Edición)
   const handleGuardarIntegrante = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorForm(null)
 
-    if (esIndice && integrantes.some((i) => i.esIndice)) {
+    // Validar persona índice única (salvo que sea el mismo en edición)
+    if (esIndice && integrantes.some((i) => i.esIndice && i.id !== integranteEnEdicion?.id)) {
       setErrorForm('Ya existe una persona índice en esta familia. Solo puede haber una.')
       return
     }
@@ -165,7 +217,9 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
     setGuardando(true)
 
     try {
-      const nuevoRef = doc(collection(db, 'familias', famId, 'integrantes'))
+      const docRef = integranteEnEdicion
+        ? doc(db, 'familias', famId, 'integrantes', integranteEnEdicion.id)
+        : doc(collection(db, 'familias', famId, 'integrantes'))
 
       // Ensamblar condiciones
       const listaCondiciones: Condicion[] = condicionesSeleccionadas.map((nombre) => ({
@@ -183,9 +237,7 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
 
       const edadNum = edadAprox ? parseInt(edadAprox, 10) : null
 
-      const nuevoIntegranteData: Omit<Integrante, 'createdAt'> & {
-        createdAt: Timestamp
-      } = {
+      const dataAguardar: Record<string, any> = {
         famId,
         orgId,
         parentesco,
@@ -198,29 +250,29 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
         padreId: padreId || null,
         tipoFiliacion,
         condiciones: listaCondiciones,
-        createdBy: firebaseUser?.uid ?? 'anon',
         deviceId: localStorage.getItem('cuida_device_id') || 'dev_local',
         schemaVersion: 1,
-        createdAt: Timestamp.now(),
+      }
+
+      if (!integranteEnEdicion) {
+        dataAguardar.createdBy = firebaseUser?.uid ?? 'anon'
+        dataAguardar.createdAt = Timestamp.now()
+      }
+
+      // Actualizar estado local de forma optimista inmediata
+      if (integranteEnEdicion) {
+        setIntegrantes((prev) =>
+          prev.map((i) => (i.id === integranteEnEdicion.id ? { ...i, ...dataAguardar } : i))
+        )
       }
 
       await Promise.race([
-        setDoc(nuevoRef, nuevoIntegranteData),
+        setDoc(docRef, dataAguardar, { merge: true }),
         new Promise((resolve) => setTimeout(resolve, 800)),
       ])
 
-      // Reset form
-      setParentesco('Hijo / Hija')
-      setSexo('mujer')
-      setEdadAprox('')
-      setConviveActual(true)
-      setEsIndice(false)
-      setFallecido(false)
-      setMadreId('')
-      setPadreId('')
-      setCondicionesSeleccionadas([])
-      setOtraCondicion('')
       setModalAbierto(false)
+      setIntegranteEnEdicion(null)
     } catch (err) {
       console.error('[Integrantes] Error al guardar integrante:', err)
       setErrorForm('Error al guardar en el dispositivo. Reintentá.')
@@ -230,8 +282,14 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
   }
 
   // Eliminar integrante
-  const handleEliminar = async (id: string) => {
-    if (!window.confirm('¿Eliminar este integrante del registro familiar?')) return
+  const handleEliminar = async (id: string, parentescoNombre: string) => {
+    if (!window.confirm(`¿Estás seguro/a de eliminar a "${parentescoNombre}" del registro familiar?`)) {
+      return
+    }
+
+    // Actualización optimista inmediata
+    setIntegrantes((prev) => prev.filter((i) => i.id !== id))
+
     try {
       await Promise.race([
         deleteDoc(doc(db, 'familias', famId, 'integrantes', id)),
@@ -285,13 +343,7 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
         <button
           type="button"
           className="btn btn-primary btn-sm"
-          onClick={() => {
-            setErrorForm(null)
-            const hayIndice = integrantes.some((i) => i.esIndice)
-            setEsIndice(!hayIndice)
-            setParentesco(!hayIndice ? 'Referente (Índice)' : 'Hijo / Hija')
-            setModalAbierto(true)
-          }}
+          onClick={abrirModalCrear}
         >
           <UserPlus size={16} /> Agregar integrante
         </button>
@@ -307,12 +359,7 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
           <button
             type="button"
             className="btn btn-outline btn-sm"
-            onClick={() => {
-              const hayIndice = integrantes.some((i) => i.esIndice)
-              setEsIndice(!hayIndice)
-              setParentesco(!hayIndice ? 'Referente (Índice)' : 'Hijo / Hija')
-              setModalAbierto(true)
-            }}
+            onClick={abrirModalCrear}
           >
             Agregar primera persona (referente)
           </button>
@@ -346,14 +393,24 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    className="btn-borrar-int"
-                    onClick={() => handleEliminar(int.id)}
-                    title="Eliminar integrante"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="integrante-acciones">
+                    <button
+                      type="button"
+                      className="btn-accion-int"
+                      onClick={() => abrirModalEditar(int)}
+                      title="Editar datos del integrante"
+                    >
+                      <Edit2 size={15} />
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-accion-int btn-borrar-int"
+                      onClick={() => handleEliminar(int.id, int.parentesco)}
+                      title="Eliminar integrante"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Filiación (Madre / Padre) */}
@@ -384,16 +441,21 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
         </div>
       )}
 
-      {/* Modal Alta Rápida de Integrante */}
+      {/* Modal Alta o Edición de Integrante */}
       {modalAbierto && (
         <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-int-titulo">
           <div className="modal-contenido tarjeta">
             <header className="modal-cabecera">
-              <h2 id="modal-int-titulo" className="h3">Nuevo integrante</h2>
+              <h2 id="modal-int-titulo" className="h3">
+                {integranteEnEdicion ? 'Editar integrante' : 'Nuevo integrante'}
+              </h2>
               <button
                 type="button"
                 className="btn-cerrar"
-                onClick={() => setModalAbierto(false)}
+                onClick={() => {
+                  setModalAbierto(false)
+                  setIntegranteEnEdicion(null)
+                }}
                 disabled={guardando}
               >
                 <X size={20} />
@@ -602,7 +664,10 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
                 <button
                   type="button"
                   className="btn btn-outline"
-                  onClick={() => setModalAbierto(false)}
+                  onClick={() => {
+                    setModalAbierto(false)
+                    setIntegranteEnEdicion(null)
+                  }}
                   disabled={guardando}
                 >
                   Cancelar
@@ -613,7 +678,11 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
                   disabled={guardando}
                 >
                   <Plus size={16} />
-                  {guardando ? 'Guardando...' : 'Agregar al registro'}
+                  {guardando
+                    ? 'Guardando...'
+                    : integranteEnEdicion
+                    ? 'Guardar cambios'
+                    : 'Agregar al registro'}
                 </button>
               </footer>
             </form>
@@ -683,8 +752,35 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
           gap: var(--sp-3);
         }
 
+        .integrante-acciones {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-left: auto;
+        }
+
+        .btn-accion-int {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: var(--r-campo);
+          background: transparent;
+          border: 1px solid transparent;
+          color: var(--apagado);
+          cursor: pointer;
+          transition: all var(--dur-rapido) var(--ease);
+        }
+
+        .btn-accion-int:hover {
+          background: var(--papel);
+          color: var(--azul);
+          border-color: var(--linea);
+        }
+
         .simbolo-genograma {
-          color: var(--azul-profundo);
+          color: var(--azul);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -699,41 +795,32 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
           flex: 1;
           display: flex;
           flex-direction: column;
+          gap: 2px;
         }
 
         .parentesco-fila {
           display: flex;
           align-items: center;
           gap: var(--sp-2);
+          flex-wrap: wrap;
         }
 
         .badge-indice {
-          background: var(--lago);
-          color: #FFF;
-          font-size: 0.65rem;
+          background: color-mix(in srgb, var(--azul) 12%, transparent);
+          color: var(--azul);
+          font-size: 0.7rem;
           padding: 1px 6px;
-          border-radius: var(--r-capsula);
+          border-radius: 4px;
           font-weight: 700;
         }
 
         .badge-fallecido {
-          background: var(--texto-secundario);
-          color: #FFF;
-          font-size: 0.65rem;
-          padding: 1px 6px;
-          border-radius: var(--r-capsula);
-        }
-
-        .btn-borrar-int {
-          background: transparent;
-          border: none;
-          color: var(--texto-secundario);
-          cursor: pointer;
-          padding: 4px;
-        }
-
-        .btn-borrar-int:hover {
+          background: color-mix(in srgb, var(--critico) 12%, transparent);
           color: var(--critico);
+          font-size: 0.7rem;
+          padding: 1px 6px;
+          border-radius: 4px;
+          font-weight: 600;
         }
 
         .integrante-filiacion {

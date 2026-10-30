@@ -18,6 +18,7 @@ import {
   getDoc,
   collection,
   onSnapshot,
+  setDoc,
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
@@ -52,6 +53,9 @@ import {
   ChevronRight,
   UserCheck,
   FileText,
+  Edit2,
+  X,
+  Save,
 } from 'lucide-react'
 
 // Nombres cortos de los 11 patrones de Gordon
@@ -88,6 +92,50 @@ export function FichaFamiliarPage() {
   const [modalPdfAbierto, setModalPdfAbierto] = useState(false)
   const [generandoPdf, setGenerandoPdf] = useState(false)
   const [errorPdf, setErrorPdf] = useState<string | null>(null)
+
+  // Estado para editar datos generales de la familia
+  const [modalEditarFamiliaAbierto, setModalEditarFamiliaAbierto] = useState(false)
+  const [editApellido, setEditApellido] = useState('')
+  const [editDomicilio, setEditDomicilio] = useState('')
+  const [editReferente, setEditReferente] = useState('')
+  const [guardandoFamilia, setGuardandoFamilia] = useState(false)
+
+  const abrirModalEditarFamilia = () => {
+    if (!familia) return
+    setEditApellido(familia.apellido || '')
+    setEditDomicilio(familia.domicilio || '')
+    setEditReferente(familia.referenteParentesco || 'Jefe/a de hogar')
+    setModalEditarFamiliaAbierto(true)
+  }
+
+  const handleGuardarFamiliaBasicos = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!famId || !familia) return
+    if (!editApellido.trim() || !editDomicilio.trim()) return
+
+    setGuardandoFamilia(true)
+    const datosNuevos = {
+      apellido: editApellido.trim(),
+      domicilio: editDomicilio.trim(),
+      referenteParentesco: editReferente.trim(),
+    }
+
+    // Actualización optimista local
+    setFamilia((prev) => (prev ? { ...prev, ...datosNuevos } : prev))
+
+    try {
+      const famRef = doc(db, 'familias', famId)
+      await Promise.race([
+        setDoc(famRef, datosNuevos, { merge: true }),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
+      setModalEditarFamiliaAbierto(false)
+    } catch (err) {
+      console.error('Error al actualizar familia:', err)
+    } finally {
+      setGuardandoFamilia(false)
+    }
+  }
 
   const handleExportarPdf = async () => {
     if (!familia) return
@@ -410,6 +458,16 @@ export function FichaFamiliarPage() {
         </button>
 
         <div className="ficha-acciones-top">
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            onClick={abrirModalEditarFamilia}
+            title="Editar datos básicos de la familia"
+          >
+            <Edit2 size={14} />
+            <span>Editar datos</span>
+          </button>
+
           <button
             type="button"
             className="btn btn-outline btn-sm"
@@ -874,6 +932,87 @@ export function FichaFamiliarPage() {
         onCerrar={() => setModalConsentimientoAbierto(false)}
         onConsentimientoGuardado={handleConsentimientoGuardado}
       />
+
+      {/* Modal Editar Datos Básicos de la Familia */}
+      {modalEditarFamiliaAbierto && (
+        <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-editar-fam-titulo">
+          <div className="modal-contenido tarjeta stack" style={{ maxWidth: '480px' }}>
+            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-2)' }}>
+                <Edit2 size={20} color="var(--azul)" />
+                <h3 id="modal-editar-fam-titulo" className="h4" style={{ margin: 0 }}>
+                  Editar datos de la familia
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="btn-cerrar"
+                onClick={() => setModalEditarFamiliaAbierto(false)}
+                disabled={guardandoFamilia}
+              >
+                <X size={20} />
+              </button>
+            </header>
+
+            <form onSubmit={handleGuardarFamiliaBasicos} className="stack" style={{ gap: 'var(--sp-3)' }}>
+              <div className="campo">
+                <label htmlFor="input-edit-apellido">Apellido de la familia *</label>
+                <input
+                  id="input-edit-apellido"
+                  type="text"
+                  required
+                  value={editApellido}
+                  onChange={(e) => setEditApellido(e.target.value)}
+                  disabled={guardandoFamilia}
+                />
+              </div>
+
+              <div className="campo">
+                <label htmlFor="input-edit-domicilio">Domicilio / Dirección *</label>
+                <input
+                  id="input-edit-domicilio"
+                  type="text"
+                  required
+                  value={editDomicilio}
+                  onChange={(e) => setEditDomicilio(e.target.value)}
+                  disabled={guardandoFamilia}
+                />
+              </div>
+
+              <div className="campo">
+                <label htmlFor="input-edit-referente">Parentesco o Rol del Referente</label>
+                <input
+                  id="input-edit-referente"
+                  type="text"
+                  value={editReferente}
+                  onChange={(e) => setEditReferente(e.target.value)}
+                  placeholder="Ej. Madre, Padre, Abuela..."
+                  disabled={guardandoFamilia}
+                />
+              </div>
+
+              <footer style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm"
+                  onClick={() => setModalEditarFamiliaAbierto(false)}
+                  disabled={guardandoFamilia}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primario btn-sm"
+                  disabled={guardandoFamilia || !editApellido.trim() || !editDomicilio.trim()}
+                >
+                  <Save size={14} />
+                  <span>{guardandoFamilia ? 'Guardando...' : 'Guardar cambios'}</span>
+                </button>
+              </footer>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Modal interactivo de Exportación de PDF Offline (Paso 10) */}
       {modalPdfAbierto && (

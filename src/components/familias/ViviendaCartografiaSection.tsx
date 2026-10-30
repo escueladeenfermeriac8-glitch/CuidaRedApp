@@ -508,17 +508,37 @@ export const ViviendaCartografiaSection: React.FC<ViviendaCartografiaSectionProp
 
         .servicios-grilla {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-          gap: var(--sp-2);
-          margin-top: var(--sp-1);
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: var(--sp-3);
+          margin-top: var(--sp-2);
         }
 
         .checkbox-servicio {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.8rem;
+          gap: var(--sp-2);
+          font-size: 0.85rem;
+          font-weight: 500;
           cursor: pointer;
+          padding: var(--sp-2) var(--sp-3);
+          background: var(--papel);
+          border: 1px solid var(--linea);
+          border-radius: var(--r-campo);
+          transition: all var(--dur-rapido) var(--ease);
+        }
+
+        .checkbox-servicio:hover {
+          border-color: var(--azul);
+          background: color-mix(in srgb, var(--azul) 4%, transparent);
+        }
+
+        .checkbox-servicio input[type="checkbox"] {
+          width: 18px !important;
+          height: 18px !important;
+          min-height: 18px !important;
+          cursor: pointer;
+          accent-color: var(--azul);
+          flex-shrink: 0;
         }
 
         .boton-adjuntar-foto {
