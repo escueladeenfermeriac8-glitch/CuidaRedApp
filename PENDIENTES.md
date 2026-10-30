@@ -147,6 +147,18 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Autoguardado reactivo y persistencia offline en Firestore en la subcolección `familias/{famId}/valoraciones/{id}` con `tipo: 'patrones'`
 - [x] Sincronización bidireccional con el anillo de 11 patrones de la Ficha Familiar (`FichaFamiliarPage.tsx`)
 
+---
+
+## ✅ Completado en paso 9
+
+- [x] Pantalla unificada de instrumentos de valoración familiar (`InstrumentosPage.tsx`) accesible desde `/familias/:famId/instrumentos` con soporte para selección por query param (`?tipo=apgar|holmes|mos`)
+- [x] Cuestionario APGAR Familiar (Smilkstein): selector del integrante que responde, 5 dimensiones con botones táctiles accesibles (0 a 2 pts), cálculo dinámico de puntaje y clasificación funcional (7-10 funcional, 3-6 leve, 0-2 grave)
+- [x] Escala de Holmes y Rahe: buscador de eventos vitales en tiempo real, selección de los 43 eventos con UCV ponderadas, suma automática de riesgo (&lt;150 bajo, 150-299 moderado, &ge;300 alto) y campo para otros estresores
+- [x] Cuestionario MOS de apoyo social (Sherbourne &amp; Stewart): pregunta descriptiva de red íntima, 19 ítems (escala 1 a 5), desglose de las 4 subescalas e índice global de apoyo social adecuado vs. escaso
+- [x] Motor de sugerencias y alertas psicosociales (`reglasInstrumentos.json`): detección reactiva de disfunción familiar y alerta de riesgo psicosocial crítico cuando coexisten alto estrés (&ge;150 UCV) y bajo apoyo social
+- [x] Persistencia reactiva offline en Firestore (`familias/{famId}/valoraciones`) e integración con la Ficha Familiar y la Campanita de Pendientes
+
+
 
 
 

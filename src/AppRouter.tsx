@@ -28,6 +28,7 @@ import { ValoracionComunidadPage } from '@/pages/comunidad/ValoracionComunidadPa
 import { FamiliasPage } from '@/pages/familias/FamiliasPage'
 import { FichaFamiliarPage } from '@/pages/familias/FichaFamiliarPage'
 import { ValoracionPatronesPage } from '@/pages/familias/ValoracionPatronesPage'
+import { InstrumentosPage } from '@/pages/familias/InstrumentosPage'
 import { PendientesPage } from '@/pages/pendientes/PendientesPage'
 
 // Placeholders de pasos 4-13
@@ -92,6 +93,7 @@ export function AppRouter() {
           <Route path="familias" element={<FamiliasPage />} />
           <Route path="familias/:famId" element={<FichaFamiliarPage />} />
           <Route path="familias/:famId/patrones" element={<ValoracionPatronesPage />} />
+          <Route path="familias/:famId/instrumentos" element={<InstrumentosPage />} />
           <Route path="pendientes" element={<PendientesPage />} />
           <Route
             path="sincronizar"
