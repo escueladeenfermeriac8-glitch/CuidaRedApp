@@ -7,10 +7,10 @@ import React, { useState, useEffect } from 'react'
 import {
   collection,
   doc,
-  getDocs,
+  onSnapshot,
   setDoc,
   deleteDoc,
-  serverTimestamp,
+  Timestamp,
 } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
@@ -97,38 +97,47 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
   const [condicionesSeleccionadas, setCondicionesSeleccionadas] = useState<string[]>([])
   const [otraCondicion, setOtraCondicion] = useState('')
 
-  // Cargar integrantes y parejas de Firestore
-  const cargarDatos = async () => {
-    setCargando(true)
-    try {
-      // 1. Integrantes
-      const intSnap = await getDocs(collection(db, 'familias', famId, 'integrantes'))
-      const listaInt: IntegranteConId[] = []
-      intSnap.forEach((d) => {
-        listaInt.push({ id: d.id, ...(d.data() as Integrante) })
-      })
-      setIntegrantes(listaInt)
-
-      // 2. Parejas
-      const parSnap = await getDocs(collection(db, 'familias', famId, 'parejas'))
-      const listaPar: Pareja[] = []
-      parSnap.forEach((d) => {
-        listaPar.push({ id: d.id, ...(d.data() as Pareja) })
-      })
-      setParejas(listaPar)
-
-      if (onCambioIntegrantes) {
-        onCambioIntegrantes(listaInt)
-      }
-    } catch (err) {
-      console.error('[Integrantes] Error al cargar:', err)
-    } finally {
-      setCargando(false)
-    }
-  }
-
+  // Suscripción reactiva a integrantes y parejas de Firestore
   useEffect(() => {
-    cargarDatos()
+    setCargando(true)
+    const intColRef = collection(db, 'familias', famId, 'integrantes')
+    const parColRef = collection(db, 'familias', famId, 'parejas')
+
+    const unsubInt = onSnapshot(
+      intColRef,
+      (snap) => {
+        const listaInt: IntegranteConId[] = []
+        snap.forEach((d) => {
+          listaInt.push({ id: d.id, ...(d.data() as Integrante) })
+        })
+        setIntegrantes(listaInt)
+        if (onCambioIntegrantes) {
+          onCambioIntegrantes(listaInt)
+        }
+        setCargando(false)
+      },
+      (err) => {
+        console.warn('[Integrantes] Error al cargar integrantes:', err)
+        setCargando(false)
+      }
+    )
+
+    const unsubPar = onSnapshot(
+      parColRef,
+      (snap) => {
+        const listaPar: Pareja[] = []
+        snap.forEach((d) => {
+          listaPar.push({ id: d.id, ...(d.data() as Pareja) })
+        })
+        setParejas(listaPar)
+      },
+      (err) => console.warn('[Parejas] Error al cargar parejas:', err)
+    )
+
+    return () => {
+      unsubInt()
+      unsubPar()
+    }
   }, [famId])
 
   // Validación clínica en tiempo real (ADENDA §5)
@@ -175,7 +184,7 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
       const edadNum = edadAprox ? parseInt(edadAprox, 10) : null
 
       const nuevoIntegranteData: Omit<Integrante, 'createdAt'> & {
-        createdAt: ReturnType<typeof serverTimestamp>
+        createdAt: Timestamp
       } = {
         famId,
         orgId,
@@ -192,10 +201,13 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
         createdBy: firebaseUser?.uid ?? 'anon',
         deviceId: localStorage.getItem('cuida_device_id') || 'dev_local',
         schemaVersion: 1,
-        createdAt: serverTimestamp(),
+        createdAt: Timestamp.now(),
       }
 
-      await setDoc(nuevoRef, nuevoIntegranteData)
+      await Promise.race([
+        setDoc(nuevoRef, nuevoIntegranteData),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
 
       // Reset form
       setParentesco('Hijo / Hija')
@@ -209,8 +221,6 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
       setCondicionesSeleccionadas([])
       setOtraCondicion('')
       setModalAbierto(false)
-
-      await cargarDatos()
     } catch (err) {
       console.error('[Integrantes] Error al guardar integrante:', err)
       setErrorForm('Error al guardar en el dispositivo. Reintentá.')
@@ -223,8 +233,10 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
   const handleEliminar = async (id: string) => {
     if (!window.confirm('¿Eliminar este integrante del registro familiar?')) return
     try {
-      await deleteDoc(doc(db, 'familias', famId, 'integrantes', id))
-      await cargarDatos()
+      await Promise.race([
+        deleteDoc(doc(db, 'familias', famId, 'integrantes', id)),
+        new Promise((resolve) => setTimeout(resolve, 800)),
+      ])
     } catch (err) {
       console.error('[Integrantes] Error al eliminar:', err)
     }
@@ -275,8 +287,9 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
           className="btn btn-primary btn-sm"
           onClick={() => {
             setErrorForm(null)
-            setEsIndice(integrantes.length === 0) // Primera persona por defecto es índice
-            setParentesco(integrantes.length === 0 ? 'Referente (Índice)' : 'Hijo / Hija')
+            const hayIndice = integrantes.some((i) => i.esIndice)
+            setEsIndice(!hayIndice)
+            setParentesco(!hayIndice ? 'Referente (Índice)' : 'Hijo / Hija')
             setModalAbierto(true)
           }}
         >
@@ -295,8 +308,9 @@ export const IntegrantesManager: React.FC<IntegrantesManagerProps> = ({
             type="button"
             className="btn btn-outline btn-sm"
             onClick={() => {
-              setEsIndice(true)
-              setParentesco('Referente (Índice)')
+              const hayIndice = integrantes.some((i) => i.esIndice)
+              setEsIndice(!hayIndice)
+              setParentesco(!hayIndice ? 'Referente (Índice)' : 'Hijo / Hija')
               setModalAbierto(true)
             }}
           >
