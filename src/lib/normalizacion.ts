@@ -46,6 +46,8 @@ export function normalizar(texto: string): string {
   return s
 }
 
+export const normalizarTexto = normalizar
+
 /**
  * Distancia de edición de Levenshtein (para búsqueda aproximada)
  * DISENO_BASE.md §6.1: "distancia de edición ≤ 2"

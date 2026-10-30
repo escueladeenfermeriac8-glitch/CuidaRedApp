@@ -1,0 +1,95 @@
+{
+  "id": "guiaComunitaria",
+  "version": "1.0",
+  "fuente": "Wolhein y Martínez (2014), cap. 14; Anexo D de DISENO_BASE.md",
+  "patrones": [
+    {
+      "n": 1,
+      "nombre": "Percepción y manejo de la salud",
+      "descripcion": "Cómo la comunidad percibe su salud y bienestar, y cómo maneja sus recursos sanitarios y preventivos.",
+      "guiaSubjetiva": "Nivel de salud percibido (1 a 5); problemas de salud más importantes; prácticas culturales y tradicionales; acceso percibido al CAPS y hospitales; demanda de programas; quién cuida a los grupos vulnerables; prevención y coberturas.",
+      "guiaObjetiva": "Datos demográficos del barrio; morbilidad y mortalidad observada o registrada en el CAPS; accidentes viales; presencia de curanderos o terapias alternativas; estado de cobertura de vacunación en niños y adultos.",
+      "ejemplosFuentes": ["Vecinos del barrio", "Equipo del CAPS", "Líderes comunitarios", "Observación en terreno", "Estadística oficial"]
+    },
+    {
+      "n": 2,
+      "nombre": "Nutricional-metabólico",
+      "descripcion": "Consumo de alimentos y agua, estado nutricional general y disponibilidad de recursos básicos.",
+      "guiaSubjetiva": "Estado nutricional percibido (niñez y adultos mayores); funcionamiento de comedores y copas de leche; relación entre ingresos y costo de la canasta alimentaria; acceso a agua potable (red o camión) y costos de energía/gas.",
+      "guiaObjetiva": "Aspecto general y vestimenta según el clima en niños y mayores observados en calles y plazas; tipos de comercios en el barrio (verdulerías, carnicerías, kioscos); consumo de alimentos ultraprocesados en escuelas; estado del suministro de agua.",
+      "ejemplosFuentes": ["Comedores comunitarios", "Kioscos y almacenes", "Familias", "Observación en escuelas"]
+    },
+    {
+      "n": 3,
+      "nombre": "Eliminación",
+      "descripcion": "Gestión y disposición de residuos sólidos, aguas servidas y saneamiento ambiental.",
+      "guiaSubjetiva": "Percepción comunitaria sobre la recolección de basura, frecuencia y zonas sin cobertura; presencia de plagas (roedores, mosquitos); problemas con desagües o pozos ciegos; humo por quema de residuos.",
+      "guiaObjetiva": "Existencia de microbasurales a cielo abierto; zanjas con aguas servidas; cobertura de red cloacal; presencia de contenedores; estado de limpieza de calles y baldíos.",
+      "ejemplosFuentes": ["Recorredores barriales", "Inspección visual", "Vecinos", "Reclamos vecinales"]
+    },
+    {
+      "n": 4,
+      "nombre": "Actividad y ejercicio",
+      "descripcion": "Movilidad, transporte, espacios recreativos y condiciones de la vivienda en el entorno.",
+      "guiaSubjetiva": "Facilidad y frecuencia de líneas de colectivo para llegar al trabajo, CAPS o escuelas; uso de plazas y centros deportivos por jóvenes y mayores; percepción sobre el estado de las calles y veredas.",
+      "guiaObjetiva": "Estado del pavimento, ripio o tierra; iluminación pública; existencia y mantenimiento de plazas, canchitas y clubes barriales; arbolado público y calidad del aire; barreras arquitectónicas.",
+      "ejemplosFuentes": ["Usuarios de transporte", "Clubes de barrio", "Observación de calles y plazas"]
+    },
+    {
+      "n": 5,
+      "nombre": "Sueño y descanso",
+      "descripcion": "Nivel de tranquilidad nocturna, ruidos molestos y factores que alteran el descanso.",
+      "guiaSubjetiva": "Percepción de tranquilidad durante la noche; horarios habituales de descanso; quejas por ruidos molestos de boliches, talleres, motos o industrias.",
+      "guiaObjetiva": "Nivel de tránsito pesado nocturno; proximidad a rutas, vías de tren o zonas industriales activas 24 hs; presencia de luminarias titilantes o sectores a oscuras.",
+      "ejemplosFuentes": ["Vecinos de distintas manzanas", "Comerciantes nocturnos", "Policía barrial"]
+    },
+    {
+      "n": 6,
+      "nombre": "Cognitivo-perceptual",
+      "descripcion": "Nivel educativo, acceso a la información, idioma y toma de decisiones comunitarias.",
+      "guiaSubjetiva": "Nivel educativo predominante; existencia de analfabetismo o adultos sin terminar la escuela; conocimiento de los derechos ciudadanos y salud; cómo se entera el barrio de las novedades.",
+      "guiaObjetiva": "Escuelas primarias, secundarias y jardines en el barrio o cercanas; centros de educación de adultos; medios barriales o grupos de WhatsApp comunitarios; señalización de calles.",
+      "ejemplosFuentes": ["Docentes de escuelas", "Centros comunitarios", "Familias del barrio"]
+    },
+    {
+      "n": 7,
+      "nombre": "Autopercepción y autoconcepto",
+      "descripcion": "Identidad barrial, orgullo de pertenencia, estado de ánimo colectivo y estigmatización.",
+      "guiaSubjetiva": "Si a los vecinos les gusta vivir en el barrio; cómo describirían el barrio a alguien de afuera; si sienten que el barrio progresa o decae; vivencia de discriminación o estigma social.",
+      "guiaObjetiva": "Murales, carteles barriales, cuidado de frentes y jardines; antigüedad del asentamiento; cobertura periodística externa del barrio (positiva vs. estigmatizante).",
+      "ejemplosFuentes": ["Jóvenes", "Adultos mayores históricos", "Asociaciones vecinales"]
+    },
+    {
+      "n": 8,
+      "nombre": "Rol y relaciones",
+      "descripcion": "Interacción entre vecinos, cohesión social, empleo, situaciones de conflicto y violencia.",
+      "guiaSubjetiva": "Relaciones entre vecinos (solidaridad vs. aislamiento o peleas); confianza en las instituciones barriales; empleo formal e informal; episodios de violencia intrafamiliar o barrial.",
+      "guiaObjetiva": "Espacios de encuentro activos (plazas, esquinas, centros culturales); existencia de comisiones vecinales activas; estadísticas de denuncias por violencia; nivel de empleo y changas.",
+      "ejemplosFuentes": ["Vecinalistas", "Comerciantes", "Referentes barriales", "Equipo del CAPS"]
+    },
+    {
+      "n": 9,
+      "nombre": "Sexualidad y reproducción",
+      "descripcion": "Estructura familiar predominante, salud sexual y reproductiva comunitaria y educación sexual.",
+      "guiaSubjetiva": "Acceso a métodos anticonceptivos en el CAPS; aceptación de la diversidad sexual; demanda de educación sexual integral (ESI); preocupación por embarazo no planificado en la adolescencia.",
+      "guiaObjetiva": "Proporción de familias monoparentales o extensas; talleres de salud sexual en el CAPS o escuelas; registro de controles prenatales precoces en el CAPS.",
+      "ejemplosFuentes": ["Área de ginecología/obstetricia del CAPS", "Adolescentes", "Familias"]
+    },
+    {
+      "n": 10,
+      "nombre": "Adaptación y tolerancia al estrés",
+      "descripcion": "Capacidad comunitaria para afrontar crisis, adversidades, consumo problemático y redes de apoyo.",
+      "guiaSubjetiva": "Factores principales de estrés (desempleo, inflación, inseguridad, inundaciones); presencia de consumo problemático de alcohol o drogas; existencia de grupos de ayuda mutua.",
+      "guiaObjetiva": "Servicios o dispositivos de salud mental en la zona; respuesta comunitaria ante temporales o emergencias; presencia de fuerzas de seguridad o dispositivos de contención.",
+      "ejemplosFuentes": ["Parroquias/iglesias", "Grupos de autoayuda", "Personal de salud mental del CAPS"]
+    },
+    {
+      "n": 11,
+      "nombre": "Valores y creencias",
+      "descripcion": "Lo que la comunidad considera valioso, espiritualidad, tradiciones y participación comunitaria.",
+      "guiaSubjetiva": "Cuáles son los valores más apreciados en el barrio (la familia, el trabajo, la solidaridad); fiestas patronales o festivales populares; grado de tolerancia y convivencia entre distintos grupos.",
+      "guiaObjetiva": "Presencia y concurrencia a templos, capillas e iglesias; actividades solidarias autogestionadas; fechas y eventos tradicionales del barrio celebrados colectivamente.",
+      "ejemplosFuentes": ["Líderes religiosos", "Comisiones festivas", "Familias tradicionales"]
+    }
+  ]
+}

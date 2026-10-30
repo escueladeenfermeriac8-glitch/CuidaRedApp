@@ -24,6 +24,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { AppLayout } from '@/layouts/AppLayout'
 import { LoginPage } from '@/pages/LoginPage'
 import { InicioPage } from '@/pages/InicioPage'
+import { ValoracionComunidadPage } from '@/pages/comunidad/ValoracionComunidadPage'
 
 // Placeholders de pasos 4-13
 const Placeholder = ({ titulo }: { titulo: string }) => (
@@ -83,6 +84,7 @@ export function AppRouter() {
         {/* App del campo */}
         <Route path="/" element={<AppLayout />}>
           <Route index element={<InicioPage />} />
+          <Route path="comunidad/valorar" element={<ValoracionComunidadPage />} />
           <Route path="familias" element={<Placeholder titulo="Familias" />} />
           <Route
             path="pendientes"

@@ -1,0 +1,176 @@
+{
+  "id": "bancoFODA",
+  "version": "1.0",
+  "fuente": "Anexo B de DISENO_BASE.md",
+  "descripcion": "Banco de preguntas estructuradas para identificar Oportunidades y Amenazas comunitarias",
+  "preguntas": [
+    {
+      "id": "SE1",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay empleo o changas cerca del barrio, formales o informales, para jóvenes y adultos?",
+      "tipo": "R",
+      "patrones": [8]
+    },
+    {
+      "id": "SE2",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Cuántos hogares dependen de ingresos inestables o de ayudas para cubrir lo básico?",
+      "tipo": "K",
+      "patrones": [8]
+    },
+    {
+      "id": "SE3",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Existen programas de asistencia alimentaria o de ingresos (nacionales, provinciales o municipales) a los que las familias puedan acceder?",
+      "tipo": "R",
+      "patrones": [2]
+    },
+    {
+      "id": "SE4",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Funcionan comedores, merenderos u ollas populares? ¿Con qué regularidad?",
+      "tipo": "R",
+      "patrones": [2]
+    },
+    {
+      "id": "SE5",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Los precios de alimentos, transporte o servicios dificultan que las familias cubran lo esencial?",
+      "tipo": "K",
+      "patrones": [2, 4]
+    },
+    {
+      "id": "SE6",
+      "dimension": "socioeconomica",
+      "pregunta": "¿El transporte público conecta el barrio con el CAPS, las escuelas y el trabajo en tiempos razonables?",
+      "tipo": "R",
+      "patrones": [4]
+    },
+    {
+      "id": "SE7",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay problemas de acceso a vivienda segura (ocupaciones, alquileres informales, hacinamiento, riesgo de desalojo)?",
+      "tipo": "K",
+      "patrones": [4]
+    },
+    {
+      "id": "SE8",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay escuelas, centros de formación o cursos de oficios accesibles?",
+      "tipo": "R",
+      "patrones": [6]
+    },
+    {
+      "id": "SE9",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay cortes o faltantes de servicios básicos (agua, luz, gas, recolección de residuos)?",
+      "tipo": "K",
+      "patrones": [2, 3]
+    },
+    {
+      "id": "SE10",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay cooperativas, ferias o emprendimientos del barrio con apoyo externo?",
+      "tipo": "R",
+      "patrones": [8]
+    },
+    {
+      "id": "SE11",
+      "dimension": "socioeconomica",
+      "pregunta": "¿Hay riesgos ambientales o productivos cerca del barrio (basurales, industrias, inundaciones, fumigaciones, rutas)?",
+      "tipo": "K",
+      "patrones": [1, 3]
+    },
+    {
+      "id": "SE12",
+      "dimension": "socioeconomica",
+      "pregunta": "¿El CAPS, el municipio u otras instituciones llegan al barrio con operativos, campañas o actividades?",
+      "tipo": "R",
+      "patrones": [1]
+    },
+    {
+      "id": "EM1",
+      "dimension": "emocional",
+      "pregunta": "¿Hay espacios comunitarios (vecinal, club, iglesia, centro cultural) donde las personas se reúnen y se sienten acompañadas?",
+      "tipo": "R",
+      "patrones": [8, 11]
+    },
+    {
+      "id": "EM2",
+      "dimension": "emocional",
+      "pregunta": "¿Hay situaciones de violencia familiar, de género o en la calle que generen miedo o inseguridad?",
+      "tipo": "K",
+      "patrones": [8]
+    },
+    {
+      "id": "EM3",
+      "dimension": "emocional",
+      "pregunta": "¿Hay servicios o grupos de apoyo emocional o de salud mental accesibles (psicología, líneas de ayuda, grupos de pares)?",
+      "tipo": "R",
+      "patrones": [10]
+    },
+    {
+      "id": "EM4",
+      "dimension": "emocional",
+      "pregunta": "¿Se observa consumo problemático de alcohol u otras sustancias, sobre todo en adolescentes?",
+      "tipo": "K",
+      "patrones": [10]
+    },
+    {
+      "id": "EM5",
+      "dimension": "emocional",
+      "pregunta": "¿Las personas se sienten estigmatizadas o discriminadas por vivir en el barrio?",
+      "tipo": "K",
+      "patrones": [7]
+    },
+    {
+      "id": "EM6",
+      "dimension": "emocional",
+      "pregunta": "¿Hay referentes o líderes comunitarios reconocidos a los que la gente acude?",
+      "tipo": "R",
+      "patrones": [8, 11]
+    },
+    {
+      "id": "EM7",
+      "dimension": "emocional",
+      "pregunta": "¿Hay personas mayores o cuidadoras en aislamiento o con sobrecarga de cuidado y sin ayuda?",
+      "tipo": "K",
+      "patrones": [8, 10]
+    },
+    {
+      "id": "EM8",
+      "dimension": "emocional",
+      "pregunta": "¿Hay actividades recreativas, deportivas o culturales para niñas, niños, adolescentes y personas mayores?",
+      "tipo": "R",
+      "patrones": [4]
+    },
+    {
+      "id": "EM9",
+      "dimension": "emocional",
+      "pregunta": "¿Se observan desánimo, desesperanza o estrés sostenido en muchas personas (por trabajo, deudas o inseguridad)?",
+      "tipo": "K",
+      "patrones": [7, 10]
+    },
+    {
+      "id": "EM10",
+      "dimension": "emocional",
+      "pregunta": "¿La comunidad confía en el CAPS y en sus equipos?",
+      "tipo": "R",
+      "patrones": [1]
+    },
+    {
+      "id": "EM11",
+      "dimension": "emocional",
+      "pregunta": "¿Los jóvenes tienen pocas oportunidades de estudio, trabajo o proyecto de vida?",
+      "tipo": "K",
+      "patrones": [6, 7]
+    },
+    {
+      "id": "EM12",
+      "dimension": "emocional",
+      "pregunta": "¿Hay tradiciones, celebraciones o redes de solidaridad que fortalecen la identidad del barrio?",
+      "tipo": "R",
+      "patrones": [7, 11]
+    }
+  ]
+}

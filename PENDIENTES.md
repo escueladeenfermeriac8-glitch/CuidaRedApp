@@ -107,4 +107,18 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
 - [x] Aviso en pantalla de login recordando la recomendación de seguridad de activar bloqueo de pantalla (PIN/huella) en el dispositivo
 - [x] Loader accesible con el anillo de 11 nodos animado durante la verificación de sesión
 
+---
+
+## ✅ Completado en paso 6
+
+- [x] Selector visual de punto cardinal con brújula (`SelectorCardinal.tsx`), abarcando los 8 puntos cardinales (N, NE, E, SE, S, SO, O, NO) con aguja orientable
+- [x] Modal de alta rápida de barrio (`ModalCrearBarrio.tsx`) con previsualización de etiqueta `"Barrio X (Cardinal)"`, cálculo de `claveUnica` y validación de duplicados
+- [x] Catálogo `src/catalogos/guiaComunitaria.json` con los 11 patrones de Gordon según Wolhein y Martínez (Anexo D), detallando guías de datos subjetivos y objetivos
+- [x] Catálogo `src/catalogos/bancoFODA.json` con las 24 preguntas socioeconómicas y emocionales de Anexo B.3
+- [x] Pantalla de valoración comunitaria (`ValoracionComunidadPage.tsx`) con stepper de 11 nodos, autoguardado en Firestore offline y registro de datos subjetivos/objetivos/fuente
+- [x] Asistente FODA con generación automática de Fortalezas (patrones conservados con evidencia) y Debilidades (patrones alterados con justificación) según Anexo B.2
+- [x] Banco asistido de Oportunidades y Amenazas con cálculo automático de prioridades 1 a 5 según Anexo B.4
+- [x] Renovación de la pantalla de Inicio (`InicioPage.tsx`) con badge de barrio activo, selector territorial, campana de pendientes y accesos directos a valorar comunidad y familia
+
+
 

@@ -19,6 +19,7 @@ import type { Timestamp } from 'firebase/firestore'
 // Campos comunes a todos los documentos
 // ─────────────────────────────────────────────
 export interface BaseDoc {
+  id?: string
   createdAt: Timestamp
   createdBy: string          // uid
   deviceId: string
