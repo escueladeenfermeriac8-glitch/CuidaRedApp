@@ -208,6 +208,16 @@ y los ítems pendientes de validación de `DISENO_BASE.md §15`.
   - Comparativa lado a lado y resolución como "Familia 2 conviviente" o fusión con borrado lógico trazable.
 - [x] Configuración de rutas `/central/*` en `AppRouter.tsx` y enlace contextual en la pantalla de inicio para supervisores.
 
+---
+
+## ✅ Completado en paso 13 (Cierre y Entrega Final)
+
+- [x] Guía breve de uso para estudiantes (`docs/GUIA_ESTUDIANTE.md`): instructivo de 1 página redactado en español rioplatense (voseo) para estudiantes de enfermería comunitaria en prácticas de CAPS. Cubre preparación antes de salir al terreno, resguardo de privacidad (Ley 25.326 sin DNI ni nombres), recorrido paso a paso (búsqueda, consentimiento, integrantes, genograma, vivienda, patrones de Gordon e instrumentos), generación del PDF offline, sincronización y limpieza segura del teléfono personal.
+- [x] Documentación exhaustiva en `README.md`: arquitectura técnica, principios de producto, requisitos previos, variables de entorno, configuración de Firebase Auth y reglas de Firestore con emulador, comandos de despliegue en Firebase Hosting (`dev` y `prod`), estructura del repositorio y referencias a la bibliografía base.
+- [x] Consolidación de `PENDIENTES.md` con el estado final de todos los entregables requeridos por `DISENO_BASE.md §16` y bitácora completa de los 13 pasos ejecutados con éxito.
+- [x] Verificación de calidad final: `npx tsc --noEmit` con 0 errores y compilación `npm run build` exitosa con generación de service worker Workbox y manifiesto PWA.
+
+
 
 
 
