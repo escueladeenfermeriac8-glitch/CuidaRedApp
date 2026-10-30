@@ -65,11 +65,14 @@ export async function generarPdfFamiliar(datos: DatosExportacionFamiliar): Promi
   const verificarEspacio = (alturaRequerida: number): void => {
     if (y - alturaRequerida < MARGEN + 40) {
       pagina = pdfDoc.addPage([A4_ANCHO, A4_ALTO])
+      engancharDrawTextSeguro(pagina)
       y = A4_ALTO - MARGEN
       dibujarEncabezadoPaginaSiguiente(pagina, datos.familia, fontBold)
       y -= 35
     }
   }
+
+  engancharDrawTextSeguro(pagina)
 
   // 1. ENCABEZADO INSTITUCIONAL
   y = dibujarEncabezadoPrincipal(pagina, y, datos, fontRegular, fontBold)
@@ -109,18 +112,57 @@ export async function generarPdfFamiliar(datos: DatosExportacionFamiliar): Promi
 }
 
 /**
- * Descarga en el navegador el PDF generado como archivo
+  * Sanitiza una cadena para asegurar que sólo contenga caracteres codificables en WinAnsi (StandardFonts).
+  * Evita excepciones como "WinAnsi cannot encode '⚠'" o caracteres invisibles que corrompen el flujo PDF.
+  */
+export function sanitizarTextoParaPdf(texto: string | null | undefined): string {
+  if (!texto) return ''
+  return String(texto)
+    .replace(/\u26a0/g, '[!]')
+    .replace(/[\u2022\u25cf]/g, '-')
+    .replace(/[\u2192\u21d2]/g, '->')
+    .replace(/[\u2190\u21d0]/g, '<-')
+    .replace(/[\u2713\u2714]/g, '[OK]')
+    .replace(/[\u2717\u2718]/g, '[X]')
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u2014\u2013]/g, '-')
+    .replace(/\u2026/g, '...')
+    .replace(/[^\x20-\x7E\xA0-\xFF]/g, (char) => {
+      const norm = char.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      if (/^[\x20-\x7E\xA0-\xFF]$/.test(norm)) return norm
+      return ' '
+    })
+}
+
+/**
+ * Intercepta y sanitiza automáticamente todas las llamadas a drawText de la página,
+ * garantizando que ningún carácter especial o emoji haga fallar la exportación del PDF.
+ */
+function engancharDrawTextSeguro(pagina: PDFPage): void {
+  const originalDrawText = pagina.drawText.bind(pagina)
+  pagina.drawText = (text: string, options?: Parameters<PDFPage['drawText']>[1]) => {
+    return originalDrawText(sanitizarTextoParaPdf(text), options)
+  }
+}
+
+/**
+ * Descarga en el navegador el PDF generado como archivo asegurando encabezado y cuerpo válidos
  */
 export function descargarBlobPdf(pdfBytes: Uint8Array, nombreArchivo: string): void {
-  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
+  // Asegurar que pasamos una copia limpia de los bytes exactos sin padding del pool
+  const bytesLimpios = new Uint8Array(pdfBytes)
+  const blob = new Blob([bytesLimpios as Uint8Array<ArrayBuffer>], { type: 'application/pdf' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = nombreArchivo
+  a.download = nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`
   document.body.appendChild(a)
   a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
+  setTimeout(() => {
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, 1000)
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -863,7 +905,7 @@ function dibujarPiePagina(
   })
 
   if (fam.syncEstado && fam.syncEstado !== 'enviado') {
-    pagina.drawText('⚠ Contiene datos sin sincronizar con la Central', {
+    pagina.drawText('[!] Contiene datos sin sincronizar con la Central', {
       x: MARGEN + 220,
       y: MARGEN + 6,
       size: 6.8,
