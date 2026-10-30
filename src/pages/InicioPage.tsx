@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
 import { ModalCrearBarrio } from '@/components/barrios/ModalCrearBarrio'
@@ -34,12 +34,13 @@ export function InicioPage() {
   const capsIdActual = usuario?.capsIds?.[0] ?? 'caps_1'
 
   useEffect(() => {
-    async function cargarBarrios() {
-      setCargandoBarrios(true)
-      try {
-        const orgId = usuario?.orgId ?? 'org_default'
-        const q = query(collection(db, 'barrios'), where('orgId', '==', orgId))
-        const snap = await getDocs(q)
+    setCargandoBarrios(true)
+    const orgId = usuario?.orgId ?? 'org_default'
+    const q = query(collection(db, 'barrios'), where('orgId', '==', orgId))
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snap) => {
         const lista: Barrio[] = []
         snap.forEach((d) => lista.push({ id: d.id, ...(d.data() as Barrio) }))
         setBarrios(lista)
@@ -51,15 +52,18 @@ export function InicioPage() {
           setBarrioSeleccionado(match)
         } else if (lista.length > 0) {
           setBarrioSeleccionado(lista[0])
+        } else {
+          setBarrioSeleccionado(null)
         }
-      } catch (err) {
-        console.error('[Inicio] Error al cargar barrios:', err)
-      } finally {
+        setCargandoBarrios(false)
+      },
+      (err) => {
+        console.warn('[Inicio] Error en snapshot de barrios:', err)
         setCargandoBarrios(false)
       }
-    }
+    )
 
-    cargarBarrios()
+    return () => unsubscribe()
   }, [usuario])
 
   const handleSeleccionarBarrio = (barrio: Barrio) => {

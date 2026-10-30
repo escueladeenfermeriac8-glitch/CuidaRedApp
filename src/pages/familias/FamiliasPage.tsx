@@ -9,7 +9,7 @@ import {
   collection,
   query,
   where,
-  getDocs,
+  onSnapshot,
   doc,
   setDoc,
   serverTimestamp,
@@ -62,38 +62,47 @@ export function FamiliasPage() {
 
   const capsIdActual = usuario?.capsIds?.[0] ?? 'caps_1'
 
-  // Cargar familias y barrios de la organización
+  // Cargar familias y barrios reactivamente de la organización
   useEffect(() => {
-    async function cargarDatos() {
-      setCargando(true)
-      try {
-        const orgId = usuario?.orgId ?? 'org_default'
+    setCargando(true)
+    const orgId = usuario?.orgId ?? 'org_default'
 
-        // 1. Barrios
-        const qBarrios = query(collection(db, 'barrios'), where('orgId', '==', orgId))
-        const snapBarrios = await getDocs(qBarrios)
+    // 1. Barrios
+    const qBarrios = query(collection(db, 'barrios'), where('orgId', '==', orgId))
+    const unsubBarrios = onSnapshot(
+      qBarrios,
+      (snap) => {
         const listaBarrios: Barrio[] = []
-        snapBarrios.forEach((d) => listaBarrios.push({ id: d.id, ...(d.data() as Barrio) }))
+        snap.forEach((d) => listaBarrios.push({ id: d.id, ...(d.data() as Barrio) }))
         setBarrios(listaBarrios)
 
-        if (listaBarrios.length > 0 && !nuevoBarrioId) {
-          setNuevoBarrioId(listaBarrios[0].id ?? '')
+        if (listaBarrios.length > 0) {
+          setNuevoBarrioId((prev) => prev || listaBarrios[0].id || '')
         }
+      },
+      (err) => console.warn('[Familias] Error snapshot barrios:', err)
+    )
 
-        // 2. Familias
-        const qFamilias = query(collection(db, 'familias'), where('orgId', '==', orgId))
-        const snapFamilias = await getDocs(qFamilias)
+    // 2. Familias
+    const qFamilias = query(collection(db, 'familias'), where('orgId', '==', orgId))
+    const unsubFamilias = onSnapshot(
+      qFamilias,
+      (snap) => {
         const listaFamilias: Familia[] = []
-        snapFamilias.forEach((d) => listaFamilias.push({ id: d.id, ...(d.data() as Familia) }))
+        snap.forEach((d) => listaFamilias.push({ id: d.id, ...(d.data() as Familia) }))
         setFamilias(listaFamilias)
-      } catch (err) {
-        console.error('[Familias] Error al cargar:', err)
-      } finally {
+        setCargando(false)
+      },
+      (err) => {
+        console.warn('[Familias] Error snapshot familias:', err)
         setCargando(false)
       }
-    }
+    )
 
-    cargarDatos()
+    return () => {
+      unsubBarrios()
+      unsubFamilias()
+    }
   }, [usuario])
 
   // Filtrado y búsqueda normalizada con tolerancia a errores de tipeo (Levenshtein ≤ 2)

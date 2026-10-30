@@ -129,8 +129,25 @@ export function CentralLayout() {
       {/* Área principal de contenido */}
       <div className="central-contenedor-principal">
         <header className="central-topbar">
-          <div className="topbar-info">
-            <span className="badge-modo-central">Central Web</span>
+          <div className="topbar-info" style={{ display: 'flex', alignItems: 'center', gap: 'var(--sp-3)' }}>
+            <span className="badge-modo-central">Central Docente</span>
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => navigate('/')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--sp-1)',
+                padding: 'var(--sp-1) var(--sp-3)',
+                fontSize: '0.82rem',
+                backgroundColor: 'var(--superficie)',
+              }}
+              title="Ir al flujo de campo móvil para cargar familias y visitas"
+            >
+              <Smartphone size={14} />
+              <span>Ir a Vista de Campo</span>
+            </button>
             {!isOnline && (
               <span className="badge-offline-central">Sin conexión · Modo lectura</span>
             )}

@@ -20,6 +20,7 @@ import {
   FileText,
   Compass,
   Home,
+  Plus,
 } from 'lucide-react'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
@@ -154,16 +155,27 @@ export function CentralFamiliasPage() {
             Listado consolidado de familias, avance de valoración comunitaria y diagnósticos.
           </p>
         </div>
-        <button
-          type="button"
-          className="btn btn-outline btn-sm"
-          onClick={exportarCSV}
-          disabled={familiasFiltradas.length === 0}
-          title="Exportar registros filtrados a formato CSV"
-        >
-          <Download size={14} />
-          <span>Exportar a CSV</span>
-        </button>
+        <div style={{ display: 'flex', gap: 'var(--sp-2)', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/familias')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)' }}
+          >
+            <Plus size={14} />
+            <span>Nueva Familia</span>
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            onClick={exportarCSV}
+            disabled={familiasFiltradas.length === 0}
+            title="Exportar registros filtrados a formato CSV"
+          >
+            <Download size={14} />
+            <span>Exportar a CSV</span>
+          </button>
+        </div>
       </header>
 
       {/* Barra de Filtros y Búsqueda */}
@@ -242,8 +254,23 @@ export function CentralFamiliasPage() {
         {cargando ? (
           <div className="tabla-cargando text-apagado">Cargando familias...</div>
         ) : familiasFiltradas.length === 0 ? (
-          <div className="tabla-vacia text-apagado">
-            No se encontraron familias que coincidan con los filtros aplicados.
+          <div className="tabla-vacia" style={{ textAlign: 'center', padding: 'var(--sp-6)' }}>
+            <p className="text-apagado" style={{ marginBottom: 'var(--sp-3)' }}>
+              {familias.length === 0
+                ? 'No hay familias registradas todavía en este CAPS.'
+                : 'No se encontraron familias que coincidan con los filtros aplicados.'}
+            </p>
+            {familias.length === 0 && (
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => navigate('/familias')}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-2)', margin: '0 auto' }}
+              >
+                <Plus size={14} />
+                <span>Registrar primera familia</span>
+              </button>
+            )}
           </div>
         ) : (
           <div className="tabla-scroll-wrapper">

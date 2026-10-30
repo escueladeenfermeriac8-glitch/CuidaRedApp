@@ -16,10 +16,12 @@ import {
   Target,
   Sparkles,
   ArrowRight,
+  Plus,
 } from 'lucide-react'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
+import { ModalCrearBarrio } from '@/components/barrios/ModalCrearBarrio'
 import type { Barrio, Familia, ValoracionComunidad, Foda, ItemFoda } from '@/types'
 
 export function CentralBarriosPage() {
@@ -29,41 +31,34 @@ export function CentralBarriosPage() {
   const [valoracionCom, setValoracionCom] = useState<ValoracionComunidad | null>(null)
   const [familiasDelBarrio, setFamiliasDelBarrio] = useState<Familia[]>([])
   const [cargando, setCargando] = useState(true)
+  const [modalBarrioAbierto, setModalBarrioAbierto] = useState(false)
 
-  // Cargar lista de barrios
+  // Cargar lista de barrios reactivamente
   useEffect(() => {
-    let activo = true
+    setCargando(true)
+    const orgId = usuario?.orgId ?? 'org_default'
+    const qBar = query(collection(db, 'barrios'), where('orgId', '==', orgId))
 
-    async function cargarBarrios() {
-      if (!usuario?.capsIds || usuario.capsIds.length === 0) {
-        setCargando(false)
-        return
-      }
-
-      try {
-        const capsQuery = usuario.capsIds.slice(0, 10)
-        const qBar = query(collection(db, 'barrios'), where('capsId', 'in', capsQuery))
-        const snap = await getDocs(qBar)
+    const unsub = onSnapshot(
+      qBar,
+      (snap) => {
         const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Barrio[]
-
-        if (activo) {
-          setBarrios(docs)
-          if (docs.length > 0) {
-            setBarrioSeleccionado(docs[0])
-          }
-          setCargando(false)
+        setBarrios(docs)
+        if (docs.length > 0) {
+          setBarrioSeleccionado((actual) => actual ? docs.find((b) => b.id === actual.id) || docs[0] : docs[0])
+        } else {
+          setBarrioSeleccionado(null)
         }
-      } catch (err) {
-        console.warn('[CentralBarrios] Error cargando barrios:', err)
-        if (activo) setCargando(false)
+        setCargando(false)
+      },
+      (err) => {
+        console.warn('[CentralBarrios] Error en onSnapshot:', err)
+        setCargando(false)
       }
-    }
+    )
 
-    cargarBarrios()
-    return () => {
-      activo = false
-    }
-  }, [usuario?.capsIds])
+    return () => unsub()
+  }, [usuario?.orgId])
 
   // Cargar valoración comunitaria y familias cuando cambia el barrio
   useEffect(() => {
@@ -129,6 +124,16 @@ export function CentralBarriosPage() {
             Diagnóstico de necesidades comunitarias por patrones de Gordon y matriz estratégica FODA.
           </p>
         </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          id="btn-central-nuevo-barrio"
+          onClick={() => setModalBarrioAbierto(true)}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-2)' }}
+        >
+          <Plus size={16} />
+          <span>Nuevo Barrio</span>
+        </button>
       </header>
 
       {/* Selector de barrio en píldoras */}
@@ -152,6 +157,15 @@ export function CentralBarriosPage() {
                 </button>
               )
             })}
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={() => setModalBarrioAbierto(true)}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-1)', padding: 'var(--sp-1) var(--sp-2)' }}
+            >
+              <Plus size={14} />
+              <span>Nuevo</span>
+            </button>
           </div>
         )}
       </section>
@@ -310,8 +324,35 @@ export function CentralBarriosPage() {
           </div>
         </div>
       ) : (
-        <div className="tarjeta text-apagado">No hay barrios disponibles.</div>
+        <div className="tarjeta" style={{ padding: 'var(--sp-8)', textAlign: 'center' }}>
+          <Compass size={40} color="var(--lago)" style={{ margin: '0 auto var(--sp-3)' }} />
+          <h2 className="h3" style={{ marginBottom: 'var(--sp-2)' }}>Todavía no hay barrios registrados</h2>
+          <p className="text-apagado" style={{ maxWidth: '480px', margin: '0 auto var(--sp-4)' }}>
+            Para comenzar a relevar familias y valorar la comunidad, registrá el primer barrio con su punto cardinal.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setModalBarrioAbierto(true)}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--sp-2)', margin: '0 auto' }}
+          >
+            <Plus size={16} />
+            <span>Registrar primer barrio</span>
+          </button>
+        </div>
       )}
+
+      {/* Modal para dar de alta barrio */}
+      <ModalCrearBarrio
+        abierto={modalBarrioAbierto}
+        capsIdActual={usuario?.capsIds?.[0] || 'caps-1'}
+        onCerrar={() => setModalBarrioAbierto(false)}
+        onBarrioCreado={(nuevoBarrio) => {
+          setBarrios((prev) => [...prev, nuevoBarrio])
+          setBarrioSeleccionado(nuevoBarrio)
+        }}
+        barriosExistentes={barrios}
+      />
 
       <style>{`
         .central-barrios-stack {
