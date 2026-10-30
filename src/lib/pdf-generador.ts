@@ -150,7 +150,6 @@ function engancharDrawTextSeguro(pagina: PDFPage): void {
  * Descarga en el navegador el PDF generado como archivo asegurando encabezado y cuerpo válidos
  */
 export function descargarBlobPdf(pdfBytes: Uint8Array, nombreArchivo: string): void {
-  // Asegurar que pasamos una copia limpia de los bytes exactos sin padding del pool
   const bytesLimpios = new Uint8Array(pdfBytes)
   const blob = new Blob([bytesLimpios as Uint8Array<ArrayBuffer>], { type: 'application/pdf' })
   const url = URL.createObjectURL(blob)
@@ -162,7 +161,21 @@ export function descargarBlobPdf(pdfBytes: Uint8Array, nombreArchivo: string): v
   setTimeout(() => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
-  }, 1000)
+  }, 10000)
+}
+
+/**
+ * Abre el PDF en una pestaña nueva del navegador y dispara la ventana de impresión (window.print)
+ */
+export function abrirBlobPdfParaImprimir(pdfBytes: Uint8Array): void {
+  const bytesLimpios = new Uint8Array(pdfBytes)
+  const blob = new Blob([bytesLimpios as Uint8Array<ArrayBuffer>], { type: 'application/pdf' })
+  const url = URL.createObjectURL(blob)
+  const nuevaVentana = window.open(url, '_blank')
+  if (!nuevaVentana) {
+    // Si el navegador bloqueó la ventana emergente, forzar descarga
+    descargarBlobPdf(pdfBytes, 'Ficha_Familiar.pdf')
+  }
 }
 
 // ─────────────────────────────────────────────────────────────

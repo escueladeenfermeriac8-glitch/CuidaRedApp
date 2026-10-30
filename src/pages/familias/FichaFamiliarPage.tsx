@@ -36,7 +36,7 @@ import type {
 import { ConsentimientoModal } from '@/components/familias/ConsentimientoModal'
 import { IntegrantesManager } from '@/components/familias/IntegrantesManager'
 import { ViviendaCartografiaSection } from '@/components/familias/ViviendaCartografiaSection'
-import { generarPdfFamiliar, descargarBlobPdf } from '@/lib/pdf-generador'
+import { generarPdfFamiliar, descargarBlobPdf, abrirBlobPdfParaImprimir } from '@/lib/pdf-generador'
 import { SyncBadge } from '@/components/sync/SyncBadge'
 import {
   ArrowLeft,
@@ -50,6 +50,7 @@ import {
   Activity,
   HeartHandshake,
   Download,
+  Printer,
   ChevronRight,
   UserCheck,
   FileText,
@@ -137,7 +138,7 @@ export function FichaFamiliarPage() {
     }
   }
 
-  const handleExportarPdf = async () => {
+  const handleExportarPdf = async (modo: 'descargar' | 'imprimir' = 'descargar') => {
     if (!familia) return
     setGenerandoPdf(true)
     setErrorPdf(null)
@@ -152,13 +153,17 @@ export function FichaFamiliarPage() {
         rolValorador: usuario?.rol || 'valorador',
       })
 
-      const codLimpio = (familia.codigoFamiliar || 'FAM').replace(/[^a-zA-Z0-9_-]/g, '_')
-      const apeLimpio = (familia.apellido || 'Familiar').replace(/[^a-zA-Z0-9_-]/g, '_')
-      descargarBlobPdf(pdfBytes, `Ficha_${codLimpio}_${apeLimpio}.pdf`)
+      if (modo === 'imprimir') {
+        abrirBlobPdfParaImprimir(pdfBytes)
+      } else {
+        const codLimpio = (familia.codigoFamiliar || 'FAM').replace(/[^a-zA-Z0-9_-]/g, '_')
+        const apeLimpio = (familia.apellido || 'Familiar').replace(/[^a-zA-Z0-9_-]/g, '_')
+        descargarBlobPdf(pdfBytes, `Ficha_${codLimpio}_${apeLimpio}.pdf`)
+      }
       setModalPdfAbierto(false)
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error generando PDF:', err)
-      setErrorPdf('No se pudo generar el documento PDF. Verificá los datos.')
+      setErrorPdf(err?.message ? `Error: ${err.message}` : 'No se pudo generar el documento PDF.')
     } finally {
       setGenerandoPdf(false)
     }
@@ -1054,7 +1059,7 @@ export function FichaFamiliarPage() {
               El PDF se genera 100% en tu dispositivo y se descarga de inmediato, incluso sin conexión a internet.
             </p>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--sp-2)', marginTop: 'var(--sp-2)', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 className="btn btn-outline btn-sm"
@@ -1065,8 +1070,18 @@ export function FichaFamiliarPage() {
               </button>
               <button
                 type="button"
+                className="btn btn-outline btn-sm"
+                onClick={() => handleExportarPdf('imprimir')}
+                disabled={generandoPdf}
+                title="Abrir en pestaña nueva para visualizar o imprimir directamente"
+              >
+                <Printer size={14} />
+                <span>{generandoPdf ? 'Generando...' : 'Abrir e Imprimir'}</span>
+              </button>
+              <button
+                type="button"
                 className="btn btn-primario btn-sm"
-                onClick={handleExportarPdf}
+                onClick={() => handleExportarPdf('descargar')}
                 disabled={generandoPdf}
               >
                 <Download size={14} />
