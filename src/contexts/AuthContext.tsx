@@ -34,6 +34,7 @@ import {
   setDoc,
   serverTimestamp,
   onSnapshot,
+  Timestamp,
   type FieldValue,
 } from 'firebase/firestore'
 import { auth, db, googleProvider } from '@/lib/firebase'
@@ -62,7 +63,11 @@ export interface AuthState {
   cambiarCuenta: () => Promise<void>
   reintentarVerificacion: () => Promise<void>
   borrarDatosLocales: () => void
+  loginDemo: (rol: 'valorador' | 'supervisor') => void
+  esDemo: boolean
 }
+
+const STORAGE_KEY_DEMO_ROL = 'cuida_demo_rol'
 
 const AuthContext = createContext<AuthState | null>(null)
 
@@ -72,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [sesionCaducadaPorInactividad, setSesionCaducadaPorInactividad] = useState<boolean>(false)
+  const [esDemo, setEsDemo] = useState<boolean>(() => Boolean(localStorage.getItem(STORAGE_KEY_DEMO_ROL)))
 
   // Actualizar marca de último acceso (throttled a cada 5 minutos)
   const registrarActividad = useCallback(() => {
@@ -189,7 +195,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [registrarActividad])
 
+  const loginDemo = useCallback((rol: 'valorador' | 'supervisor') => {
+    localStorage.setItem(STORAGE_KEY_DEMO_ROL, rol)
+    setEsDemo(true)
+    const demoUser: Usuario = {
+      email: rol === 'valorador' ? 'estudiante.demo@unrc.edu.ar' : 'docente.demo@unrc.edu.ar',
+      nombre: rol === 'valorador' ? 'Estudiante UNRC' : 'Prof. Belén Docente',
+      rol,
+      orgId: 'org-unrc-enfermeria',
+      capsIds: ['caps-1', 'caps-alberdi'],
+      comision: rol === 'valorador' ? 'Comisión A - 2026' : undefined,
+      activo: true,
+      createdAt: Timestamp.now(),
+      createdBy: 'sistema-demo',
+      deviceId: getDeviceId(),
+      schemaVersion: 1,
+    }
+    const demoFbUser = {
+      uid: rol === 'valorador' ? 'usr-estudiante-demo' : 'usr-docente-demo',
+      email: demoUser.email,
+      displayName: demoUser.nombre,
+    } as unknown as User
+
+    setUsuario(demoUser)
+    setFirebaseUser(demoFbUser)
+    setEstado('activo')
+    setError(null)
+  }, [])
+
   useEffect(() => {
+    const demoRol = localStorage.getItem(STORAGE_KEY_DEMO_ROL) as 'valorador' | 'supervisor' | null
+    if (demoRol) {
+      loginDemo(demoRol)
+      return
+    }
+
     const unsubAuth = onAuthStateChanged(auth, async (fbUser) => {
       if (!fbUser) {
         setFirebaseUser(null)
@@ -230,7 +270,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     return () => unsubAuth()
-  }, [verificarInactividad, procesarUsuarioOInvitacion])
+  }, [verificarInactividad, procesarUsuarioOInvitacion, loginDemo])
 
   // Escuchar eventos del usuario para renovar timestamp de actividad
   useEffect(() => {
@@ -267,6 +307,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = async () => {
+    localStorage.removeItem(STORAGE_KEY_DEMO_ROL)
+    setEsDemo(false)
     try {
       await signOut(auth)
     } finally {
@@ -294,6 +336,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const borrarDatosLocales = () => {
     try {
       localStorage.removeItem(STORAGE_KEY_ULTIMO_ACCESO)
+      localStorage.removeItem(STORAGE_KEY_DEMO_ROL)
       // Preservamos el deviceId único para evitar colisiones de códigos familiares
     } catch {
       // Ignorar
@@ -313,6 +356,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         cambiarCuenta,
         reintentarVerificacion,
         borrarDatosLocales,
+        loginDemo,
+        esDemo,
       }}
     >
       {children}

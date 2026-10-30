@@ -24,26 +24,26 @@ import {
   persistentMultipleTabManager,
 } from 'firebase/firestore'
 
+export const isFirebaseConfigured = Boolean(
+  import.meta.env.VITE_FIREBASE_API_KEY &&
+  import.meta.env.VITE_FIREBASE_PROJECT_ID,
+)
+
 const firebaseConfig = {
-  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId:             import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDemoLocalPlaceholderKey99999',
+  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'cuidared-app.firebaseapp.com',
+  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID || 'demo-cuidared',
+  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'demo-cuidared.appspot.com',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '123456789012',
+  appId:             import.meta.env.VITE_FIREBASE_APP_ID || '1:123456789012:web:demo1234567890',
 }
 
-// Verificación en desarrollo: avisa si falta alguna variable
-if (import.meta.env.DEV) {
-  const missing = Object.entries(firebaseConfig)
-    .filter(([, v]) => !v)
-    .map(([k]) => k)
-  if (missing.length > 0) {
-    console.warn(
-      `[Firebase] Variables de entorno faltantes: ${missing.join(', ')}.\n` +
-        'Copiá .env.example a .env.dev y completá los valores.',
-    )
-  }
+// Verificación en desarrollo: avisa si falta alguna variable real
+if (import.meta.env.DEV && !isFirebaseConfigured) {
+  console.info(
+    '[CuidaRed] Ejecutando en modo de prueba local (sin variables de Firebase reales).\n' +
+    'Podés usar los perfiles de demostración en el login o completar .env.dev para conectar a la nube.'
+  )
 }
 
 export const app = initializeApp(firebaseConfig)

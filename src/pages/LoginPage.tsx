@@ -6,11 +6,12 @@
 import { APP_NAME } from '@/constants/app'
 import { useAuth } from '@/contexts/AuthContext'
 import esAR from '@/i18n/es-AR.json'
-import { ShieldAlert, RefreshCw, LogIn, Lock } from 'lucide-react'
+import { ShieldAlert, RefreshCw, LogIn, Lock, Sparkles, School, Compass } from 'lucide-react'
 
 export function LoginPage() {
   const {
     login,
+    loginDemo,
     cambiarCuenta,
     reintentarVerificacion,
     error,
@@ -138,6 +139,73 @@ export function LoginPage() {
               )}
             </button>
           )}
+        </div>
+
+        {/* Acceso rápido para pruebas locales */}
+        <div
+          className="login-demo-box tarjeta"
+          style={{
+            marginTop: 'var(--sp-4)',
+            padding: 'var(--sp-3)',
+            backgroundColor: 'var(--superficie-elevada)',
+            border: '1px dashed var(--lago)',
+            borderRadius: 'var(--rd-md)',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 'var(--sp-2)',
+              marginBottom: 'var(--sp-1)',
+            }}
+          >
+            <Sparkles size={16} color="var(--lago)" aria-hidden="true" />
+            <strong style={{ fontSize: 'var(--text-sm)', color: 'var(--texto-principal)' }}>
+              Modo de prueba local (Demo)
+            </strong>
+          </div>
+          <p className="text-apagado" style={{ fontSize: 'var(--text-xs)', marginBottom: 'var(--sp-3)' }}>
+            Podés recorrer la app inmediatamente sin configurar credenciales de Firebase:
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-2)' }}>
+            <button
+              id="btn-demo-estudiante"
+              type="button"
+              className="btn btn-outline"
+              onClick={() => loginDemo('valorador')}
+              style={{
+                fontSize: 'var(--text-xs)',
+                padding: 'var(--sp-2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--sp-1)',
+              }}
+            >
+              <Compass size={14} aria-hidden="true" />
+              Estudiante (Campo)
+            </button>
+            <button
+              id="btn-demo-docente"
+              type="button"
+              className="btn btn-outline"
+              onClick={() => loginDemo('supervisor')}
+              style={{
+                fontSize: 'var(--text-xs)',
+                padding: 'var(--sp-2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--sp-1)',
+              }}
+            >
+              <School size={14} aria-hidden="true" />
+              Docente (Central)
+            </button>
+          </div>
         </div>
 
         {/* Aviso de confidencialidad y Ley 25.326 */}
